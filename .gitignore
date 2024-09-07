@@ -251,21 +251,24 @@ cython_debug/
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+# Игнорировать папку .idea
 .idea/
-idea/*
-.env
-commands.txt
-ovbot/logs/
 
-ovsite/tred/api/migrations/
-ovsite/xtred/build_company/migrations/
-ovsite/xtred/catalog/migrations/
-ovsite/xtred/constructions/migrations/
-ovsite/xtred/core/migrations/
-ovsite/xtred/homepage/migrations/
-ovsite/xtred/reminders/migrations/
-ovsite/xtred/users/migrations/
-ovsite/xtred/media
-../commands.txt
+# Игнорировать все файлы в папке idea
+idea/*
+
+# Игнорировать файл .env
+.env
+
+# Игнорировать командные файлы
+commands.txt
+
+# Игнорировать логи в папке ovbot
+ovbot/logs/*
+
+# Игнорировать медиа-файлы
+**/media/
+
+# Игнорировать системные файлы
 .DS_Store
 
