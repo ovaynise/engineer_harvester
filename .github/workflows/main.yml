@@ -9,12 +9,9 @@ jobs:
   send_message:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Send message
+      - name: send message
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой успешно выполнен!
+          message: ❇️Деплой проекта ${{ github.workflow }}  на сервер - успешно выполнен!!!
