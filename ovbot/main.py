@@ -35,7 +35,7 @@ ovay_bot = create_bot()
 
 async def main():
     await add_super_user_on_bd(SUPER_USER_ID)
-    await ovay_bot.info_message(TELEGRAM_GROUP_ID, 'Бот начал работу!')
+    await ovay_bot.info_message(TELEGRAM_GROUP_ID, 'Бот начал работу!!!')
     bot_task = asyncio.create_task(ovay_bot.start())
     await asyncio.gather(bot_task)
 
