@@ -1,31 +1,20 @@
-from django.contrib.auth import get_user_model
-
-from rest_framework import viewsets, permissions, filters
-
-from django_filters.rest_framework import DjangoFilterBackend
-
-from constructions.models import (Constructions,
-                                  Entity,
-                                  BrandType,
-                                  Location,
-                                  ConstructionsCompany,
-                                  ConstructionsWorks)
-from reminders.models import Reminder
-from users.models import TelegramUserModel, BannedListModel
-
 from api.pagination import ConstructionPagination
-from api.permissions import AuthorOrReadOnly, AdminOnly
+from api.permissions import AuthorOrReadOnly
+from constructions.models import (BrandType, Constructions,
+                                  ConstructionsCompany, ConstructionsWorks,
+                                  Entity, Location)
+from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
+from reminders.models import Reminder
+from rest_framework import filters, permissions, viewsets
+from users.models import BannedListModel, TelegramUserModel
 
-from .serializers import (ConstructionsSerializer,
-                          EntitySerializer,
-                          ReminderSerializer,
-                          MyUserSerializer,
-                          ConstructionsWorksSerializer,
+from .serializers import (BannedListSerializer, BrandTypeSerializer,
                           ConstructionsCompanySerializer,
-                          LocationSerializer,
-                          BrandTypeSerializer,
-                          TelegramUserSerializer,
-                          BannedListSerializer)
+                          ConstructionsSerializer,
+                          ConstructionsWorksSerializer, EntitySerializer,
+                          LocationSerializer, MyUserSerializer,
+                          ReminderSerializer, TelegramUserSerializer)
 
 User = get_user_model()
 
@@ -35,7 +24,7 @@ class TelegramUserViewSet(viewsets.ModelViewSet):
     serializer_class = TelegramUserSerializer
     permission_classes = (permissions.IsAdminUser,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ('tg_user_id', 'id')
+    filterset_fields = ("tg_user_id", "id")
 
 
 class ReminderViewSet(viewsets.ModelViewSet):
@@ -43,7 +32,7 @@ class ReminderViewSet(viewsets.ModelViewSet):
     serializer_class = ReminderSerializer
     permission_classes = (permissions.IsAdminUser,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ('owner_reminder_id', 'id')
+    filterset_fields = ("owner_reminder_id", "id")
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -59,7 +48,7 @@ class ConstructionsWorksViewSet(viewsets.ModelViewSet):
     queryset = ConstructionsWorks.objects.all()
     serializer_class = ConstructionsWorksSerializer
     permission_classes = (AuthorOrReadOnly,)
-    throttle_scope = 'low_request'
+    throttle_scope = "low_request"
     pagination_class = ConstructionPagination
 
 
@@ -92,8 +81,8 @@ class ConstructionsViewSet(viewsets.ModelViewSet):
     serializer_class = ConstructionsSerializer
     permission_classes = (AuthorOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
-    filterset_fields = ('brand', 'date_acceptance')
-    search_fields = ('title',)
+    filterset_fields = ("brand", "date_acceptance")
+    search_fields = ("title",)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

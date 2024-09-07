@@ -1,20 +1,21 @@
-import requests
-from openai import OpenAI
-from http import HTTPStatus
 import json
+from http import HTTPStatus
+
+import requests
 from config import AI_SYSTEM_ROLE
+from openai import OpenAI
 
 
 class OvayniseAI:
     def __init__(
-            self,
-            AI_API_KEY,
-            AI_URL_API,
-            AI_BALANCE_URL,
-            AI_MODEL,
-            AI_ROLE,
-            AI_MAX_TOKENS,
-            AI_HEADERS
+        self,
+        AI_API_KEY,
+        AI_URL_API,
+        AI_BALANCE_URL,
+        AI_MODEL,
+        AI_ROLE,
+        AI_MAX_TOKENS,
+        AI_HEADERS,
     ):
         self.AI_API_KEY = AI_API_KEY
         self.AI_URL_API = AI_URL_API
@@ -27,14 +28,16 @@ class OvayniseAI:
     def show_balance(self):
         try:
             response = requests.get(
-                self.AI_BALANCE_URL,
-                headers=self.AI_HEADERS)
+                self.AI_BALANCE_URL, headers=self.AI_HEADERS
+            )
             if response.status_code == HTTPStatus.OK:
                 balance_info = response.json()
-                return balance_info.get('balance')
+                return balance_info.get("balance")
             else:
-                print(f"Request failed "
-                      f"with status code {response.status_code}")
+                print(
+                    f"Request failed "
+                    f"with status code {response.status_code}"
+                )
         except requests.exceptions.RequestException as e:
             print(f"Request to balance API failed: {e}")
 
@@ -46,11 +49,13 @@ class OvayniseAI:
 
         chat_completion = client.chat.completions.create(
             model=self.AI_MODEL,
-            messages=[AI_SYSTEM_ROLE,
-                {"role": self.AI_ROLE, "content": message}],
-            max_tokens= self.AI_MAX_TOKENS
+            messages=[
+                AI_SYSTEM_ROLE,
+                {"role": self.AI_ROLE, "content": message},
+            ],
+            max_tokens=self.AI_MAX_TOKENS,
         )
         response = chat_completion.json()
         response_dict = json.loads(response)
-        text = response_dict['choices'][0]['message']['content']
+        text = response_dict["choices"][0]["message"]["content"]
         return text

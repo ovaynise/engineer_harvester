@@ -1,4 +1,5 @@
 import datetime
+
 from django import template
 
 register = template.Library()
@@ -9,7 +10,7 @@ def warranty_status(date_acceptance):
     if not date_acceptance:
         return "Дата приемки не указана"
     now = datetime.date.today()
-    warranty_end_date = date_acceptance + datetime.timedelta(days=2*365)
+    warranty_end_date = date_acceptance + datetime.timedelta(days=2 * 365)
     if now > warranty_end_date:
         return "Не на гарантии"
     else:
@@ -22,7 +23,7 @@ def warranty_status_color(date_acceptance):
     if not date_acceptance:
         return "secondary"
     now = datetime.date.today()
-    warranty_end_date = date_acceptance + datetime.timedelta(days=2*365)
+    warranty_end_date = date_acceptance + datetime.timedelta(days=2 * 365)
     if now > warranty_end_date:
         return "danger"
     else:

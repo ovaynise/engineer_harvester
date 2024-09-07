@@ -2,25 +2,14 @@ from django.urls import path
 
 from . import views
 
-
-app_name = 'reminders'
+app_name = "reminders"
 urlpatterns = [
-
-    path('', views.RemindersListView.as_view(), name='reminders'),
+    path("", views.RemindersListView.as_view(), name="reminders"),
+    path("create/", views.RemindersCreateView.as_view(), name="create"),
     path(
-        'create/',
-        views.RemindersCreateView.as_view(),
-        name='create'
+        "update/<int:pk>/", views.RemindersUpdateView.as_view(), name="update"
     ),
     path(
-        'update/<int:pk>/',
-        views.RemindersUpdateView.as_view(),
-        name='update'
+        "delete/<int:pk>/", views.RemindersDeleteView.as_view(), name="delete"
     ),
-    path(
-        'delete/<int:pk>/',
-        views.RemindersDeleteView.as_view(),
-        name='delete'
-    )
-
 ]

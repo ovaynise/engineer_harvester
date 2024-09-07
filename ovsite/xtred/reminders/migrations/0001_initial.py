@@ -7,34 +7,60 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Reminder',
+            name="Reminder",
             fields=[
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('reminder_nickname', models.TextField(verbose_name='Ник владельца')),
-                ('name_reminder', models.TextField(verbose_name='Название напоминания')),
-                ('status_reminder', models.BooleanField(default=False)),
-                ('night_mode', models.BooleanField(default=False)),
-                ('text_reminder', models.TextField(max_length=2000)),
-                ('days_repeat', models.JSONField(blank=True, null=True)),
-                ('interval_repeat', models.JSONField(default=list)),
-                ('chats_id_active', models.JSONField(default=list)),
-                ('chats_names_active', models.JSONField(default=list)),
-                ('start_at', models.DateTimeField(blank=True, null=True)),
-                ('owner_reminder_id', models.TextField(verbose_name='ID владельца')),
-                ('reminder_chat_id', models.TextField(verbose_name='ID чата')),
-                ('reminder_last_view_time', models.DateTimeField(blank=True, null=True)),
-                ('next_reminder_time', models.DateTimeField(blank=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "reminder_nickname",
+                    models.TextField(verbose_name="Ник владельца"),
+                ),
+                (
+                    "name_reminder",
+                    models.TextField(verbose_name="Название напоминания"),
+                ),
+                ("status_reminder", models.BooleanField(default=False)),
+                ("night_mode", models.BooleanField(default=False)),
+                ("text_reminder", models.TextField(max_length=2000)),
+                ("days_repeat", models.JSONField(blank=True, null=True)),
+                ("interval_repeat", models.JSONField(default=list)),
+                ("chats_id_active", models.JSONField(default=list)),
+                ("chats_names_active", models.JSONField(default=list)),
+                ("start_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "owner_reminder_id",
+                    models.TextField(verbose_name="ID владельца"),
+                ),
+                ("reminder_chat_id", models.TextField(verbose_name="ID чата")),
+                (
+                    "reminder_last_view_time",
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                (
+                    "next_reminder_time",
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

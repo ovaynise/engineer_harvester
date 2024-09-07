@@ -1,85 +1,69 @@
+from core.views import add_comment
 from django.urls import path
 
 from . import views
-from core.views import add_comment
 
-app_name = 'constructions'
+app_name = "constructions"
 
 urlpatterns = [
+    path("", views.СonstructionsListView.as_view(), name="constructions"),
+    path("location/", views.LocationListView.as_view(), name="location"),
     path(
-        '', views.СonstructionsListView.as_view(),
-         name='constructions'
-    ),
-    path(
-        'location/',
-         views.LocationListView.as_view(),
-         name='location'
-    ),
-    path(
-        'create_location/',
+        "create_location/",
         views.LocationCreateView.as_view(),
-        name='create_location'
+        name="create_location",
     ),
+    path("brand/", views.BrandTypeListView.as_view(), name="brandtype"),
     path(
-        'brand/',
-         views.BrandTypeListView.as_view(),
-         name='brandtype'
-    ),
-    path(
-        'create_brand/',
+        "create_brand/",
         views.BrandTypeCreateView.as_view(),
-        name='create_brand'
+        name="create_brand",
     ),
     path(
-        'constructions_company/',
-         views.ConstructionsCompanyListView.as_view(),
-         name='constructions_company'
+        "constructions_company/",
+        views.ConstructionsCompanyListView.as_view(),
+        name="constructions_company",
     ),
+    path("create/", views.ConstructionsCreateView.as_view(), name="create"),
     path(
-        'create/',
-        views.ConstructionsCreateView.as_view(),
-        name='create'
-    ),
-    path(
-        'update/<int:pk>/',
+        "update/<int:pk>/",
         views.ConstructionsUpdateView.as_view(),
-        name='update'
+        name="update",
     ),
     path(
-        'update_company/<int:pk>/',
+        "update_company/<int:pk>/",
         views.ConstructionsCompanyUpdateView.as_view(),
-        name='update_company'
+        name="update_company",
     ),
     path(
-        'create_company/',
+        "create_company/",
         views.ConstructionsCompanyCreateView.as_view(),
-        name='create_company'
+        name="create_company",
     ),
     path(
-        'delete/<int:pk>/',
+        "delete/<int:pk>/",
         views.ConstructionsDeleteView.as_view(),
-        name='delete'
+        name="delete",
     ),
     path(
-        'delete_company/<int:pk>/',
+        "delete_company/<int:pk>/",
         views.ConstructionsCompanyDeleteView.as_view(),
-        name='delete_company'
+        name="delete_company",
     ),
     path(
-        'constructions_detail/<int:pk>/',
+        "constructions_detail/<int:pk>/",
         views.ConstructionsDetailView.as_view(),
-        name='constructions_detail'
+        name="constructions_detail",
     ),
     path(
-        'constructions_company_detail/<int:pk>/',
+        "constructions_company_detail/<int:pk>/",
         views.ConstructionsCompanyDetailView.as_view(),
-        name='constructions_company_detail'
+        name="constructions_company_detail",
     ),
-    path('<int:pk>/comment/', add_comment, name='add_comment'),
+    path("<int:pk>/comment/", add_comment, name="add_comment"),
     path(
-        'create_work/<int:pk>/',
+        "create_work/<int:pk>/",
         views.ConstructionsWorkCreateView.as_view(),
-        name='create_work'
+        name="create_work",
     ),
-
 ]

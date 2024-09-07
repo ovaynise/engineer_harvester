@@ -6,18 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('constructions', '0002_initial'),
+        ("constructions", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='constructionsworks',
-            name='quantity',
-            field=models.FloatField(blank=True, null=True, verbose_name='Количество'),
+            model_name="constructionsworks",
+            name="quantity",
+            field=models.FloatField(
+                blank=True, null=True, verbose_name="Количество"
+            ),
         ),
         migrations.AddField(
-            model_name='constructionsworks',
-            name='unit_of_measurement',
-            field=models.CharField(blank=True, max_length=50, null=True, verbose_name='Единица измерения'),
+            model_name="constructionsworks",
+            name="unit_of_measurement",
+            field=models.CharField(
+                blank=True,
+                max_length=50,
+                null=True,
+                verbose_name="Единица измерения",
+            ),
         ),
     ]

@@ -7,109 +7,390 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='BrandType',
+            name="BrandType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('title', models.CharField(default='Татнефть', max_length=128, unique=True, verbose_name='Брэнд')),
-                ('brand_photo', models.ImageField(blank=True, null=True, upload_to='photos/building_photos/', verbose_name='Фото Брэнда')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        default="Татнефть",
+                        max_length=128,
+                        unique=True,
+                        verbose_name="Брэнд",
+                    ),
+                ),
+                (
+                    "brand_photo",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="photos/building_photos/",
+                        verbose_name="Фото Брэнда",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Брэнд АЗС',
+                "verbose_name": "Брэнд АЗС",
             },
         ),
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('text', models.TextField(verbose_name='Текст комментария')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                ("text", models.TextField(verbose_name="Текст комментария")),
             ],
             options={
-                'ordering': ('created_at',),
+                "ordering": ("created_at",),
             },
         ),
         migrations.CreateModel(
-            name='Constructions',
+            name="Constructions",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('title', models.CharField(max_length=128, verbose_name='Номер АЗС')),
-                ('description', models.CharField(blank=True, default='Нет описания', max_length=128, null=True, verbose_name='Описание')),
-                ('date_start_graph', models.DateField(blank=True, null=True, verbose_name='Дата начала строительства по графику')),
-                ('date_finish_graph', models.DateField(blank=True, null=True, verbose_name='Дата окончания строительства по графику')),
-                ('date_start', models.DateField(blank=True, null=True, verbose_name='Дата начала строительства')),
-                ('date_finish', models.DateField(blank=True, null=True, verbose_name='Дата окончания строительства')),
-                ('date_acceptance', models.DateField(blank=True, null=True, verbose_name='Дата приемки строительства')),
-                ('address_object', models.CharField(default='не назначен', max_length=255, verbose_name='Адрес')),
-                ('latitude', models.FloatField(blank=True, null=True, verbose_name='Координаты Широта')),
-                ('longitude', models.FloatField(blank=True, null=True, verbose_name='Координаты Долгота')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=128, verbose_name="Номер АЗС"),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True,
+                        default="Нет описания",
+                        max_length=128,
+                        null=True,
+                        verbose_name="Описание",
+                    ),
+                ),
+                (
+                    "date_start_graph",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата начала строительства по графику",
+                    ),
+                ),
+                (
+                    "date_finish_graph",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата окончания строительства по графику",
+                    ),
+                ),
+                (
+                    "date_start",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата начала строительства",
+                    ),
+                ),
+                (
+                    "date_finish",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата окончания строительства",
+                    ),
+                ),
+                (
+                    "date_acceptance",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата приемки строительства",
+                    ),
+                ),
+                (
+                    "address_object",
+                    models.CharField(
+                        default="не назначен",
+                        max_length=255,
+                        verbose_name="Адрес",
+                    ),
+                ),
+                (
+                    "latitude",
+                    models.FloatField(
+                        blank=True, null=True, verbose_name="Координаты Широта"
+                    ),
+                ),
+                (
+                    "longitude",
+                    models.FloatField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Координаты Долгота",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Объект',
-                'verbose_name_plural': 'Объекты',
+                "verbose_name": "Объект",
+                "verbose_name_plural": "Объекты",
             },
         ),
         migrations.CreateModel(
-            name='ConstructionsCompany',
+            name="ConstructionsCompany",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('title', models.CharField(max_length=128, unique=True, verbose_name='Название Организации')),
-                ('email', models.EmailField(default='отсутствует', max_length=254, unique=True, verbose_name='email почта')),
-                ('phone_number', models.CharField(default='отсутствует', max_length=20, unique=True, verbose_name='Мобильный номер')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=128,
+                        unique=True,
+                        verbose_name="Название Организации",
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        default="отсутствует",
+                        max_length=254,
+                        unique=True,
+                        verbose_name="email почта",
+                    ),
+                ),
+                (
+                    "phone_number",
+                    models.CharField(
+                        default="отсутствует",
+                        max_length=20,
+                        unique=True,
+                        verbose_name="Мобильный номер",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Подрядчик',
-                'verbose_name_plural': 'Подрядчики',
+                "verbose_name": "Подрядчик",
+                "verbose_name_plural": "Подрядчики",
             },
         ),
         migrations.CreateModel(
-            name='ConstructionsWorks',
+            name="ConstructionsWorks",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('work', models.CharField(max_length=255, verbose_name='Вид работы')),
-                ('date_start', models.DateField(blank=True, null=True, verbose_name='Дата начала работ')),
-                ('date_finish', models.DateField(blank=True, null=True, verbose_name='Дата окончания работ')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "work",
+                    models.CharField(
+                        max_length=255, verbose_name="Вид работы"
+                    ),
+                ),
+                (
+                    "date_start",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="Дата начала работ"
+                    ),
+                ),
+                (
+                    "date_finish",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Дата окончания работ",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Виды работ на обьекте',
+                "verbose_name": "Виды работ на обьекте",
             },
         ),
         migrations.CreateModel(
-            name='Entity',
+            name="Entity",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('title', models.CharField(max_length=128, unique=True, verbose_name='Юр.лицо')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=128, unique=True, verbose_name="Юр.лицо"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Юридическое лицо',
+                "verbose_name": "Юридическое лицо",
             },
         ),
         migrations.CreateModel(
-            name='Location',
+            name="Location",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_published', models.BooleanField(default=True, help_text='Снимите галочку, чтобы скрыть публикацию.', verbose_name='Опубликовано')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')),
-                ('country', models.CharField(default='Российская Федерация', max_length=255, verbose_name='Страна')),
-                ('city', models.CharField(default='не назначен', max_length=255, unique=True, verbose_name='Город')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Снимите галочку, чтобы скрыть публикацию.",
+                        verbose_name="Опубликовано",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Добавлено"
+                    ),
+                ),
+                (
+                    "country",
+                    models.CharField(
+                        default="Российская Федерация",
+                        max_length=255,
+                        verbose_name="Страна",
+                    ),
+                ),
+                (
+                    "city",
+                    models.CharField(
+                        default="не назначен",
+                        max_length=255,
+                        unique=True,
+                        verbose_name="Город",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Локация',
+                "verbose_name": "Локация",
             },
         ),
     ]

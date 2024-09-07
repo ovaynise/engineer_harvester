@@ -1,3 +1,3 @@
 from modules.api.weather import WeatherShow
 
-weather_minsk = WeatherShow('Минск')
+weather_minsk = WeatherShow("Минск")

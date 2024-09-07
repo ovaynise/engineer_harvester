@@ -1,32 +1,31 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from reminders.forms import ReminderForm
 from reminders.models import Reminder
-from .forms import ReminderForm
 
 
-class RemindersDeleteView(LoginRequiredMixin,DeleteView):
+class RemindersDeleteView(LoginRequiredMixin, DeleteView):
     model = Reminder
-    success_url = reverse_lazy('reminders:reminders')
+    success_url = reverse_lazy("reminders:reminders")
 
 
-class RemindersUpdateView(LoginRequiredMixin,UpdateView):
+class RemindersUpdateView(LoginRequiredMixin, UpdateView):
     model = Reminder
     form_class = ReminderForm
-    success_url = reverse_lazy('reminders:reminders')
+    success_url = reverse_lazy("reminders:reminders")
 
 
-class RemindersCreateView(LoginRequiredMixin,CreateView):
+class RemindersCreateView(LoginRequiredMixin, CreateView):
     model = Reminder
-    fields = '__all__'
-    success_url = reverse_lazy('reminders:reminders')
+    fields = "__all__"
+    success_url = reverse_lazy("reminders:reminders")
 
 
-class RemindersListView(LoginRequiredMixin,ListView):
+class RemindersListView(LoginRequiredMixin, ListView):
     model = Reminder
-    ordering = 'id'
+    ordering = "id"
     paginate_by = 10
 
     def dispatch(self, request, *args, **kwargs):

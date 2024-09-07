@@ -1,11 +1,7 @@
 from django.contrib import admin
 
-from .models import (ConstructionsCompany,
-                     Constructions,
-                     ConstructionsWorks,
-                     Location,
-                     Entity,
-                     BrandType)
+from .models import (BrandType, Constructions, ConstructionsCompany,
+                     ConstructionsWorks, Entity, Location)
 
 
 class ConstructionsWorksInline(admin.TabularInline):
@@ -15,79 +11,76 @@ class ConstructionsWorksInline(admin.TabularInline):
 
 class EntityAdmin(admin.ModelAdmin):
     list_display = (
-        'pk',
-        'title',
+        "pk",
+        "title",
     )
 
 
 class LocationAdmin(admin.ModelAdmin):
     list_display = (
-        'pk',
-        'country',
-        'city',
+        "pk",
+        "country",
+        "city",
     )
 
 
 class ConstructionsAdmin(admin.ModelAdmin):
-    inlines = (
-        ConstructionsWorksInline,
-    )
+    inlines = (ConstructionsWorksInline,)
     list_display = (
-        'pk',
-        'brand',
-        'location',
-        'title',
-        'date_start_graph',
-        'date_finish_graph',
-        'date_start',
-        'date_finish',
-        'date_acceptance',
-        'description',
+        "pk",
+        "brand",
+        "location",
+        "title",
+        "date_start_graph",
+        "date_finish_graph",
+        "date_start",
+        "date_finish",
+        "date_acceptance",
+        "description",
     )
     list_editable = (
-        'description',
-        'date_start_graph',
-        'date_finish_graph',
-        'date_start',
-        'date_finish',
-        'date_acceptance',
-
+        "description",
+        "date_start_graph",
+        "date_finish_graph",
+        "date_start",
+        "date_finish",
+        "date_acceptance",
     )
     search_fields = (
-        'title',
-        'brand',
-
+        "title",
+        "brand",
     )
     list_filter = (
-        'title',
-        'date_start',
-        'date_finish',
-        'date_acceptance',)
-    list_display_links = ('title',)
+        "title",
+        "date_start",
+        "date_finish",
+        "date_acceptance",
+    )
+    list_display_links = ("title",)
 
 
 class ConstructionsCompanyAdmin(admin.ModelAdmin):
     list_display = (
-        'pk',
-        'title',
+        "pk",
+        "title",
     )
-    list_display_links = ('title',)
+    list_display_links = ("title",)
 
 
 class ConstructionsWorksAdmin(admin.ModelAdmin):
 
     list_display = (
-        'pk',
-        'work',
+        "pk",
+        "work",
     )
 
 
 class BrandTypeAdmin(admin.ModelAdmin):
 
     list_display = (
-        'pk',
-        'title',
-        'brand_photo',
+        "pk",
+        "title",
+        "brand_photo",
     )
 
 

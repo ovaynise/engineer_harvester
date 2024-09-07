@@ -6,32 +6,51 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='myuser',
-            options={'ordering': ['username'], 'verbose_name': 'пользователь', 'verbose_name_plural': 'Пользователи'},
+            name="myuser",
+            options={
+                "ordering": ["username"],
+                "verbose_name": "пользователь",
+                "verbose_name_plural": "Пользователи",
+            },
         ),
         migrations.AddField(
-            model_name='myuser',
-            name='confirmation_code',
-            field=models.CharField(blank=True, max_length=6, verbose_name='Код подтверждения'),
+            model_name="myuser",
+            name="confirmation_code",
+            field=models.CharField(
+                blank=True, max_length=6, verbose_name="Код подтверждения"
+            ),
         ),
         migrations.AddField(
-            model_name='myuser',
-            name='date_of_birth',
-            field=models.DateField(blank=True, null=True, verbose_name='Дата рождения'),
+            model_name="myuser",
+            name="date_of_birth",
+            field=models.DateField(
+                blank=True, null=True, verbose_name="Дата рождения"
+            ),
         ),
         migrations.AddField(
-            model_name='myuser',
-            name='patronymic',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Отчество'),
+            model_name="myuser",
+            name="patronymic",
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name="Отчество"
+            ),
         ),
         migrations.AddField(
-            model_name='myuser',
-            name='role',
-            field=models.CharField(choices=[('user', 'Пользователь'), ('moderator', 'Модератор'), ('admin', 'Администратор')], default='user', max_length=50, verbose_name='Права доступа'),
+            model_name="myuser",
+            name="role",
+            field=models.CharField(
+                choices=[
+                    ("user", "Пользователь"),
+                    ("moderator", "Модератор"),
+                    ("admin", "Администратор"),
+                ],
+                default="user",
+                max_length=50,
+                verbose_name="Права доступа",
+            ),
         ),
     ]

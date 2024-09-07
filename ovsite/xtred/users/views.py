@@ -1,16 +1,11 @@
-
-from django.shortcuts import get_object_or_404
-from django.views.generic import (
-     DetailView, ListView, UpdateView
-)
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404
-
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView, UpdateView
+from users.forms import CustomUserChangeForm
 from users.models import TelegramUserModel
-from .forms import CustomUserChangeForm
 
 User = get_user_model()
 
@@ -22,24 +17,24 @@ class OnlyAuthorMixin(UserPassesTestMixin):
 
 
 class ProfileDetailView(DetailView):
-    template_name = 'users/profile.html'
+    template_name = "users/profile.html"
     model = User
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile_username = self.kwargs.get('username')
+        profile_username = self.kwargs.get("username")
         profile = get_object_or_404(User, username=profile_username)
-        context['profile'] = profile
+        context["profile"] = profile
         return context
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'users/user.html'
+    template_name = "users/user.html"
     model = User
     form_class = CustomUserChangeForm
-    success_url = reverse_lazy('homepage:index')
+    success_url = reverse_lazy("homepage:index")
 
     def get_object(self, queryset=None):
         user = self.request.user
@@ -48,7 +43,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 class UsersListView(LoginRequiredMixin, ListView):
     model = User
-    ordering = 'id'
+    ordering = "id"
     paginate_by = 10
 
     def dispatch(self, request, *args, **kwargs):
@@ -58,5 +53,5 @@ class UsersListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['telegram_users'] = TelegramUserModel.objects.all()
+        context["telegram_users"] = TelegramUserModel.objects.all()
         return context
