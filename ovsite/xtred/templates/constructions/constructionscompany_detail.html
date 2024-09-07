@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  АЗС № {{ constructions_company_detail }}
+{% endblock %}
+{% block content %}
+  <h1 class="pb-2 mb-0">{{ object }}</h1>
+{% if object.author == user or user.is_staff %}
+<a href="{% url 'constructions:update_company'  object.id %}">
+  <button type="button" class="btn btn-outline-secondary">
+    Изменить объект
+  </button>
+</a>
+{% endif %}
+<div class="row mt-3">
+    <div class="col-12 col-md-6">
+      <h5>Всего выполнено объектов:
+        <span class="badge bg-success">
+          {{ object.completed_constructions.count }}
+        </span>
+      </h5>
+      <h5>Объектов в монтаже:
+        <span class="badge bg-danger">
+          {{ object.active_constructions.count }}
+        </span>
+      </h5>
+      <h5>Всего выполнено брендов:
+        <span class="badge bg-dark">
+          {{ object.completed_brands }}
+        </span>
+      </h5>
+
+      <h5>Основной регион:
+        <span class="badge bg-warning">
+          {{ object.location }}
+        </span>
+      </h5>
+      <h5>Кол-во разных городов:
+        <span class="badge bg-warning">
+          {{ object.unique_locations_count }}
+        </span>
+      </h5>
+      {% with last_construction=object.last_construction %}
+        {% if last_construction %}
+          <h5>Последний объект:
+            <span class="badge bg-secondary">
+              №{{ last_construction.title }} - {{ last_construction.brand }}
+            </span>
+            завершен
+            <span class="badge bg-secondary">
+              {{ last_construction.date_acceptance|date:"d.m.Y" }}
+            </span>
+          </h5>
+        {% else %}
+          <h5>Нет завершённых объектов</h5>
+        {% endif %}
+      {% endwith %}
+      <h6><b>Контактная информация:</b></h6>
+      <ul class="list-group list-group-flush">
+        <li><b>Почта:</b> {{ object.email }} </li>
+        <li><b>Мобильный номер:</b> {{ object.phone_number }} </li>
+        <li><b>Юр.лицо:</b> {{ object.entity }} </li>
+
+      </ul>
+      <hr>
+      <span class="badge bg-primary">Виды выполненных работ подрядчиком. </span><br>
+      <span class="badge bg-primary">Все обьекты подрядчика. </span>
+    </div>
+    <div class="col-12 col-md-6 mb-3">
+      {% if construct.brand.brand_photo %}
+      <img
+        class="img-fluid"
+        height="200" width="400"
+        src="{% static 'img/image-holder.png' %}"
+        >
+      {% else %}
+        <img src="{% static 'img/nophoto.png' %}" height="300" width="200" alt="Фото бренда">
+      {% endif %}
+    </div>
+  </div>
+<ul>
+  {% for company in all_companies %}
+    <li>
+      <a href="{% url 'constructions:constructions_company_detail' company.pk %}">
+        {{ company.title }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Юридические лица</h2>
+<ul>
+  {% for entity in entities %}
+    <li>{{ entity }}</li>
+  {% empty %}
+    <li>Нет связанных юридических лиц</li>
+  {% endfor %}
+</ul>
+
+<h2>Виды работ</h2>
+<ul>
+  {% for work in constructions_works %}
+    <li>{{ work.work }} ({{ work.date_start }} - {{ work.date_finish }})</li>
+  {% empty %}
+    <li>Нет видов работ</li>
+  {% endfor %}
+{% endblock %}

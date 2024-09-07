@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block title %}
+Локация
+{% endblock %}
+{% block content %}
+<br>
+<div>
+  <a href="{% url 'constructions:create_location'  %}">
+    <button type="button" class="btn btn-outline-secondary">
+      Создать объект
+    </button>
+  </a>
+</div>
+<br>
+
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Город</th>
+      <th scope="col">Всего объектов в городе</th>
+      <th scope="col">Объектов в монтаже сейчас</th>
+      <th scope="col">Страна</th>
+      <th scope="col">Дата создания</th>
+      <th scope="col">Кто создал</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for location in page_obj %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th> <!-- Нумерация строк -->
+        <td>{{  location.city }}</td>
+        <td>{{ location.constructions_count }}</td>
+        <td>{{ location.constructions_count }}</td>
+        <td>{{  location.country }}</td>
+        <td>{{  location.created_at }}</td>
+        <td>
+          <p>
+            создал запись:
+            <br>
+            <a class="text-muted" href="{% url 'users:profile' location.author.username %}">
+              @{{ location.author.username }}
+            </a>
+          </p>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "includes/paginator.html" %}
+{% endblock %}

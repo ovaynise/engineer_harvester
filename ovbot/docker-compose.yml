@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  next_xtred_bot:
+    container_name: next_xtred_bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: next_xtred_bot_image
+    command: python3 main.py
+    env_file:
+      - ./.env
+    restart: always
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      URL_SERVER_API: ${URL_SERVER_API_DOCKER}
+    networks:
+      - ovaynisenetwork
+
+networks:
+  ovaynisenetwork:
+    external: true

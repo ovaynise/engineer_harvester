@@ -1,0 +1,95 @@
+{% load static %}
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom-dark fixed-top shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <div class="d-flex">
+        {% if user.is_authenticated %}
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'homepage:index' %} active {% endif %}" href="{% url 'homepage:index' %}">
+                  Главная
+              </a>
+            </button>
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:constructions' %} active {% endif %}" href="{% url 'constructions:constructions' %}">
+                  Объекты
+              </a>
+            </button>
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:constructions_company' %} active {% endif %}" href="{% url 'constructions:constructions_company' %}">
+                  Подрядчики
+              </a>
+            </button>
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:location' %} active {% endif %}" href="{% url 'constructions:location' %}">
+                  Локация
+              </a>
+            </button>
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:brandtype' %} active {% endif %}" href="{% url 'constructions:brandtype' %}">
+                  Бренд
+              </a>
+            </button>
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:constructions_company' %} active {% endif %}" href="{% url 'constructions:constructions_company' %}">
+                  О сайте
+              </a>
+            </button>
+
+
+
+            {% if user.is_staff %}
+            <button type="button" class="btn btn-outline-dark">
+              <a class="nav-link {% if view_name == 'constructions:constructions_company' %} active {% endif %}" href="{% url 'reminders:reminders' %}">
+                  Напоминания
+              </a>
+            </button>
+            {% endif %}
+        </div>
+
+        {% endif %}
+      </div>
+      <div class="d-flex align-items-center">
+        <a class="navbar-brand" href="{% url 'homepage:index' %}">
+          <img src="{% static 'img/logo.png' %}" height="50" class="d-inline-block align-top" alt="">
+        </a>
+
+        {% if user.is_authenticated %}
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+          <button type="button" class="btn btn-outline-primary">
+            <a class="text-decoration-none text-reset" href="{% url 'users:profile' user.username %}">
+                {{ user.username }}
+            </a>
+          </button>
+          <button type="button" class="btn btn-outline-primary">
+            <a class="text-decoration-none text-reset" href="{% url 'logout' %}">
+                Выйти
+            </a>
+          </button>
+          {% if user.is_staff %}
+          <button type="button" class="btn btn-outline-primary">
+            <a class="text-decoration-none text-reset" href="{% url 'users:users' %}">
+                Админ
+            </a>
+          </button>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+          <button type="button" class="btn btn-outline-primary">
+            <a class="text-decoration-none text-reset" href="{% url 'login' %}">
+                Войти
+            </a>
+          </button>
+          <button type="button" class="btn btn-outline-primary">
+            <a class="text-decoration-none text-reset" href="{% url 'registration' %}">
+                Регистрация
+            </a>
+          </button>
+        </div>
+
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+</header>

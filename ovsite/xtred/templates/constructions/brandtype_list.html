@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block title %}
+Брэнд
+{% endblock %}
+{% block content %}
+<br>
+<div>
+  <a href="{% url 'constructions:create_brand'  %}">
+    <button type="button" class="btn btn-outline-secondary">
+      Создать тип обьекта
+    </button></a>
+</div>
+<br>
+
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Фото бренда</th>
+      <th scope="col">Название бренда</th>
+      <th scope="col">Всего объектов строительства</th>
+      <th scope="col">Объектов в монтаже сейчас</th>
+      <th scope="col">Дата создания бренда</th>
+      <th scope="col">Кто создал</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for brand in page_obj %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+        {% if brand and brand.brand_photo %}
+        <img
+          class="img-fluid rounded-start"
+          src="{{ brand.brand_photo.url }}"
+          height="25" width="50"
+          alt="Фото бренда"
+        >
+      {% else %}
+        <img
+          class="img-fluid rounded-start"
+          src="{% static 'img/default_photo.png' %}"
+          height="25" width="50"
+          alt="Фото по умолчанию"
+        >
+      {% endif %}
+
+        </td>
+        <td>{{  brand.title }}</td>
+        <td>{{ brand.constructions_count }}</td>
+        <td>{{ brand.constructions_count }}</td>
+        <td>{{  brand.created_at }}</td>
+        <td>
+          <p>создал запись:<br>
+            <a class="text-muted" href="{% url 'users:profile' brand.author.username %}">
+              @{{ brand.author.username }}
+            </a>
+          </p>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "includes/paginator.html" %}
+{% endblock %}

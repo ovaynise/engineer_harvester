@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'img/fav/fav.ico' %}" type="image">
+    <title>{% block title %}{% endblock %}</title>
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    <style>
+      .navbar-custom-dark {
+        background-color: #e1e3e6;
+      }
+    </style>
+  </head>
+  <body>
+    {% include "includes/header.html" %}
+    <main class="pt-5 my-5">
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+    {% include "includes/footer.html" %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

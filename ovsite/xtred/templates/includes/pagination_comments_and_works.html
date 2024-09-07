@@ -1,0 +1,46 @@
+{% if page_obj.has_other_pages %}
+  <nav class="my-5">
+    <ul class="pagination pagination-dark">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if anchor == 'comments' %}page_comments=1{% else %}page_works=1{% endif %}{% for key, value in request.GET.items %}{% if key != 'page_comments' and key != 'page_works' %}&{{ key }}={{ value }}{% endif %}{% endfor %}#{{ anchor }}">
+            Первая
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link"
+             href="?{% if anchor == 'comments' %}page_comments={{ page_obj.previous_page_number }}{% else %}page_works={{ page_obj.previous_page_number }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page_comments' and key != 'page_works' %}&{{ key }}={{ value }}{% endif %}{% endfor %}#{{ anchor }}">
+            Предыдущая
+          </a>
+        </li>
+      {% endif %}
+
+      {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="page-item active">
+            <span class="page-link">{{ i }}</span>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if anchor == 'comments' %}page_comments={{ i }}{% else %}page_works={{ i }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page_comments' and key != 'page_works' %}&{{ key }}={{ value }}{% endif %}{% endfor %}#{{ anchor }}">
+              {{ i }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if anchor == 'comments' %}page_comments={{ page_obj.next_page_number }}{% else %}page_works={{ page_obj.next_page_number }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page_comments' and key != 'page_works' %}&{{ key }}={{ value }}{% endif %}{% endfor %}#{{ anchor }}">
+            Следующая
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?{% if anchor == 'comments' %}page_comments={{ page_obj.paginator.num_pages }}{% else %}page_works={{ page_obj.paginator.num_pages }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page_comments' and key != 'page_works' %}&{{ key }}={{ value }}{% endif %}{% endfor %}#{{ anchor }}">
+            Последняя
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

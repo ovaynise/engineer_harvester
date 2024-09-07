@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block title %}
+Объекты
+{% endblock %}
+{% block content %}
+<br>
+<div>
+  <a href="{% url 'constructions:create'  %}">
+    <button type="button" class="btn btn-outline-secondary">
+      Создать объект
+    </button>
+  </a>
+</div>
+<br>
+
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Бренд</th>
+      <th scope="col">Номер АЗС</th>
+      <th scope="col">Подрядчики</th>
+      <th scope="col">Месторасположение</th>
+      <th scope="col">Начало/Окончание монтажа</th>
+      <th scope="col">Описание</th>
+      <th scope="col">Статус гарантии<br>(2года)</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for construct in page_obj %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+          {% if construct.brand.brand_photo %}
+            <img src="{{ construct.brand.brand_photo.url }}" height="25" width="50" alt="Фото бренда">
+          {% else %}
+            <img src="{% static 'img/default_photo.png' %}" height="25" width="50" alt="Фото бренда">
+
+          {% endif %}
+        </td>
+        <td>№ <a class="mt-3 regular-link" href="{% url 'constructions:constructions_detail' construct.pk %}">
+          {{ construct.title }}
+          </a>
+
+        </a></td>
+        <td>
+          {% for company in construct.constructions_company.all %}
+          <a class="mt-3 regular-link" href="{% url 'constructions:constructions_company_detail' company.pk %}">
+            {{ company.title }}
+          </a>,
+          {% endfor %}</td>
+        <td>{{ construct.location.country }}, {{ construct.location.city }}
+          <br>
+          <i>{{ construct.address_object}}</i>
+        </td>
+        <td><br>Монтаж:
+          <i>
+            {{ construct.date_start }}/{{ construct.date_finish }}
+          </i>
+          <br>
+          Дата приемки:
+          <i> {{ construct.date_acceptance }}</i>
+        </td>
+        <td>
+          <div>
+            {% if construct.author == user %}
+          <a href="{% url 'constructions:update' construct.pk %}">Изменить запись</a> |
+          <a href="{% url 'constructions:delete' construct.pk %}">Удалить запись</a>
+            {% endif %}
+        </div>
+
+          <p>создал запись:<br>
+            <a class="text-muted" href="{% url 'users:profile' construct.author.username %}">
+            @{{ construct.author.username }}
+          </a>
+          </p>
+        </td>
+        <td><span class="badge bg-{{ construct.date_acceptance|warranty_status_color }}">
+        {{ construct.date_acceptance|warranty_status }}
+      </span></td>
+
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "includes/paginator.html" %}
+{% endblock %}

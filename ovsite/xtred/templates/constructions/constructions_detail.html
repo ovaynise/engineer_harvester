@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block title %}
+  АЗС № {{ object.title }}
+{% endblock %}
+{% block content %}
+         <div class="col-12 col-md-6 mb-3">
+      {% if object.brand.brand_photo %}
+      <img
+          class="img-fluid rounded-start"
+          src="{{ object.brand.brand_photo.url }}"
+          height="100" width="200"
+          alt="Фото бренда"
+        >
+      {% else %}
+        <img src="{% static 'img/default_photo.png' %}" height="100" width="200" alt="Фото бренда">
+      {% endif %}
+                </div>
+<h1 class="pb-2 mb-0">{{ object.brand }} - АЗС №{{ object.title }}</h1>
+  <div class="row mt-3">
+    <div class="col-12 col-md-6">
+      <h6>{{ object.location.country }}, {{ object.location.city }}: <br></h6>
+      <i>{{ object.address_object }}<br>
+        {% if object.location.latitude and object.location.longitude %}
+            Координаты: {{ object.location.latitude }}, {{ object.location.longitude }}<br>
+        {% endif %}
+      </i>
+      <br>
+     <div>
+         {% if object.author == user or user.is_staff %}
+      <a href="{% url 'constructions:update'  object.id %}">
+          <button type="button" class="btn btn-outline-secondary">
+              Изменить объект
+          </button>
+      </a>
+       {% endif %}
+ <br>
+      <hr>
+      Дата начала/окончания монтажа:
+         <span class="badge bg-dark">
+             {{ object.date_start }} / {{ object.date_finish }}
+         </span>
+         <br>
+      План начала/окончания:
+         <span class="badge bg-dark">
+             {{ object.date_start_graph }} / {{ object.date_finish_graph }}
+         </span>
+         <br>
+      Дата приемки объекта:
+         <span class="badge bg-dark">
+             {{ object.date_acceptance }}
+         </span>
+         <br>
+      Статус гарантии (2 года):
+         <span class="badge bg-{{ object.date_acceptance|warranty_status_color }}">
+        {{ object.date_acceptance|warranty_status }}
+      </span>
+         <br>
+      <hr>
+</div>
+        <div>
+      Подрядчики:
+
+        {% for company in all_companies %}
+                    <a class="mt-3 regular-link" href="{% url 'constructions:constructions_company_detail' company.pk %}">
+                        {{ company.title }}
+                    </a>
+                {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+
+    </div>
+        <hr>
+        <small class="text-muted">
+             Создал объект:
+            <a class="text-muted" href="{% url 'users:profile' object.author.username %}">
+                @{{ object.author.username }}
+            </a> - {{ object.created_at }}
+            </small>
+    <hr>
+    <br>
+        {% if user.is_authenticated %}
+  <form action="{% url 'constructions:add_comment' object.pk %}" method="post" class="col-xl-12" style="margin-top: 20px;">
+    {% csrf_token %}
+    <div class="mb-3">
+        <h4>Комментарии:</h4>
+
+      <textarea id="commentText" name="text" class="form-control" rows="3" style="height: 100px;"></textarea>
+    </div>
+    <button type="button" class="btn btn-outline-secondary">Оставить комментарий</button>
+  </form>
+{% endif %}
+
+{% for comment in comments %}
+  - - - -
+  <p><h6>{{ comment.created_at|date:"d.m.Y H:i" }} {{ comment.author.username }}:</h6> <p>
+  <p><h5><b>{{ comment.text }}</b></h5><p>
+{% endfor %}
+{% include "includes/pagination_comments_and_works.html" with page_obj=comments anchor="comments" %}
+
+<hr>
+          <br>
+ <h3><b>Все виды работ которые проводили на данном обьекте:</b></h3>
+        <br>
+<div>
+    <a href="{% url 'constructions:create_work' pk=object.pk %}">
+        <button type="button" class="btn btn-outline-secondary">
+            Создать работу
+        </button>
+    </a>
+</div>
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Вид работы</th>
+      <th scope="col">Ед.изм</th>
+      <th scope="col">Количество</th>
+      <th scope="col">Исполнитель</th>
+      <th scope="col">Дата начала   </th>
+      <th scope="col">Дата окончания</th>
+      <th scope="col">Создал запись</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for work in works %}
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ work.work }}</td>
+    <td>{{ work.unit_of_measurement }}</td>
+    <td>{{ work.quantity }}</td>
+    <td>
+      {% for company in work.constructions_company.all %}
+        <a class="mt-3 regular-link" href="{% url 'constructions:constructions_company_detail' company.pk %}">
+                        {{ company.title }}
+                    </a>
+        {% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </td>
+    <td>{{ work.date_start }}</td>
+    <td>{{ work.date_finish }}</td>
+      <td>{{ object.author }}</td>
+  </tr>
+{% endfor %}
+  </tbody>
+</table>
+{% include "includes/pagination_comments_and_works.html" with page_obj=works anchor="works" %}
+
+{% endblock %}

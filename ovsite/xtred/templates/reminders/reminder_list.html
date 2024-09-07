@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}
+Напоминания
+{% endblock %}
+{% block content %}
+<br>
+<div>
+  <a href="{% url 'reminders:create'  %}">Создать напоминание</a>
+</div>
+<br>
+
+<table class="table" style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Название напоминания</th>
+      <th scope="col">Текст напоминания</th>
+      <th scope="col">Владелец</th>
+      <th scope="col">Дни повтора</th>
+      <th scope="col">Статус напоминания</th>
+      <th scope="col">Создано</th>
+      <th scope="col">Запущено</th>
+      <th scope="col">Последний просмотр</th>
+      <th scope="col">Будет показано</th>
+      <th scope="col">Обновлено</th>
+      <th scope="col">Изменить</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for reminder in page_obj %}
+      <tr>
+        <th scope="row">{{ reminder.pk }}</th>
+        <td>{{ reminder.name_reminder }}</td>
+        <td>{{ reminder.text_reminder }}</td>
+        <td>{{ reminder.reminder_nickname }}</td>
+        <td>{{ reminder.days_repeat }}</td>
+        <td>{{ reminder.status_reminder }}</td>
+        <td>{{ reminder.created_at }}</td>
+        <td>{{ reminder.start_at }}</td>
+        <td>{{ reminder.reminder_last_view_time }}</td>
+        <td>{{ reminder.next_reminder_time }}</td>
+        <td>{{ reminder.updated_at }}</td>
+        <td><div>
+          <a href="{% url 'reminders:update' reminder.pk %}">Изменить</a> |
+          <a href="{% url 'reminders:delete' reminder.pk  %}">Удалить запись</a>
+
+        </div></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "includes/paginator.html" %}
+{% endblock %}

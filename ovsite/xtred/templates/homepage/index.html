@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}
+Главная
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+  <div class="container">
+        <div class="row mb-4">
+      <div class="col-12">
+        {% include "includes/focus_object_card.html" %}
+      </div>
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-md-6">
+        {% include "includes/statistic_card.html" %}
+      </div>
+      {% if user.is_authenticated %}
+      <div class="col-md-6">
+        {% include "includes/last_object_card.html" %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        {% include "includes/statistic_last_week_card.html" %}
+      </div>
+      {% if user.is_authenticated %}
+      <div class="col-md-6">
+        {% include "includes/statistic_current_week_card.html" %}
+      </div>
+      {% endif %}
+    </div>
+{% if page_obj %}
+  <div class="row">
+    <h5>Последние добавленные объекты:</h5>
+    {% for construct in page_obj|slice:":4" %}
+      <div class="col-md-6 mb-3">
+        {% include "includes/index_card.html" %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+    {% include "includes/paginator.html" %}
+  </div>
+{% endblock %}

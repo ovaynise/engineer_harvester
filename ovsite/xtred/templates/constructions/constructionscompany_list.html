@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}
+Подрядчики
+{% endblock %}
+{% block content %}
+<br>
+<div>
+  <a href="{% url 'constructions:create_company'  %}">
+    <button type="button" class="btn btn-outline-secondary">
+      Создать Подрядчика
+    </button>
+  </a>
+</div>
+<br>
+
+<table class="table table" style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Подрядчик</th>
+      <th scope="col">Юр.лицо</th>
+      <th scope="col">Регион</th>
+      <th scope="col">Кол-во построенных обьектов</th>
+      <th scope="col">Объектов в монтаже</th>
+      <th scope="col">Номер телефона</th>
+      <th scope="col">email</th>
+      <th scope="col">Изменить</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for company in page_obj %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+          <a class="mt-3 regular-link" href="{% url 'constructions:constructions_company_detail' company.pk %}">
+            {{ company.title }}
+          </a>
+        </td>
+        <td>{{ company.entity }}</td>
+        <td>{{ company.location.city }}</td>
+        <td>{{ company.constructions_company.count  }}</td>
+        <td>{{ company.active_constructions.count }}</td>
+        <td>{{ company.phone_number }}</td>
+        <td>{{ company.email }}</td>
+        <td><div>
+          {% if company.author == user %}
+          <a href="{% url 'constructions:update_company' company.pk %}">
+            Изменить запись
+          </a> |
+           <a href="{% url 'constructions:delete_company' company.pk %}">
+             Удалить запись
+           </a>
+          {% endif %}
+          <p>создал запись:
+            <br>
+            <a class="text-muted" href="{% url 'users:profile' company.author.username %}">
+              @{{ company.author.username }}
+            </a>
+          </p>
+
+        </div></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "includes/paginator.html" %}
+{% endblock %}
+

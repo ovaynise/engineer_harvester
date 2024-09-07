@@ -1,0 +1,20 @@
+{% load static %}
+
+<div class="p-3">
+  <h5>Последние сданные объекты:</h5>
+  <ul class="list-group">
+    {% for construct in latest_objects %}
+      <li class="list-group-item ">
+        <img src="{{ construct.brand.brand_photo.url }}" height="25" width="50" alt="Фото бренда">
+        <a class="mt-3 regular-link" href="{% url 'constructions:constructions_detail' construct.pk %}">
+          АЗС №{{ construct.title }}  {{ construct.brand }}
+        </a>
+        сдан ({{ construct.date_acceptance }})
+      </li>
+    {% empty %}
+      <li class="list-group-item ">
+        Нет данных
+      </li>
+    {% endfor %}
+  </ul>
+</div>

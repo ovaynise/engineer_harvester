@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}
+Пользователи сайта и Telegram
+{% endblock %}
+{% block content %}
+
+<h3>Таблица пользователей сайта</h3>
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Роль</th>
+      <th scope="col">Username</th>
+      <th scope="col">Фамилия</th>
+      <th scope="col">Имя</th>
+      <th scope="col">Отчество</th>
+      <th scope="col">Дата рождения</th>
+      <th scope="col">email</th>
+      <th scope="col">Номер телефона</th>
+      <th scope="col">Суперпользователь</th>
+      <th scope="col">Статус персонала</th>
+      <th scope="col">Активен</th>
+      <th scope="col">Дата входа</th>
+      <th scope="col">Дата создания</th>
+      <th scope="col">Последний логин</th>
+      <th scope="col">confirmation_code</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for user in page_obj %}
+      <tr>
+        <td>{{ user.pk }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.patronymic }}</td>
+        <td>{{ user.date_of_birth}}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone_number }}</td>
+        <td>{{ user.is_superuser }}</td>
+        <td>{{ user.is_staff }}</td>
+        <td>{{ user.is_active }}</td>
+        <td>{{ user.date_joined }}</td>
+        <td>{{ user.created_at }}</td>
+        <td>{{ user.last_login }}</td>
+        <td>{{ user.confirmation_code }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Таблица пользователей Telegram</h3>
+<table class="table " style="font-size: 10px;">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Telegram Username</th>
+      <th scope="col">Имя</th>
+      <th scope="col">Фамилия</th>
+      <th scope="col">Статус блокировки</th>
+      <th scope="col">Уровень</th>
+      <th scope="col">Связанный пользователь сайта</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for telegram_user in telegram_users %}
+      <tr>
+        <td>{{ telegram_user.pk }}</td>
+        <td>{{ telegram_user.tg_user_name }}</td>
+        <td>{{ telegram_user.tg_first_name }}</td>
+        <td>{{ telegram_user.tg_last_name }}</td>
+        <td>{{ telegram_user.ban_status }}</td>
+        <td>{{ telegram_user.level }}</td>
+        <td>
+          {% if telegram_user.user %}
+            {{ telegram_user.user.username }}
+          {% else %}
+            Не связан
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "includes/paginator.html" %}
+{% endblock %}
