@@ -14,12 +14,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-gw@oojhz)j(ai+0@=zp4k&!5eh+^@3#g(2ofjmvhj=q97ud5y)"
-)
 
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SERVER_IP = os.getenv("SERVER_IP")
+SERVER_DOMEN = os.getenv("SERVER_DOMEN")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 AUTH_USER_MODEL = "users.MyUser"
 LOGIN_REDIRECT_URL = "homepage:index"
@@ -30,9 +31,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "xtred",
-    "ovaynisenetwork",
-    "ovaynisedb",
-    "84.201.179.107",
+    SERVER_DOMEN,
+    SERVER_IP,
 ]
 
 
