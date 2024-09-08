@@ -1,0 +1,2 @@
+СОЗДАНИЕ ОБРАЗА НА ЛОКАЛКЕ ИЗ КОРНЕВОЙ ДИРЕКОТР
+docker build -t ovsite -f ovsite/Dockerfile .

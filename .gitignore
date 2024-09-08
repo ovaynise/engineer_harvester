@@ -277,4 +277,4 @@ ovbot/logs/*
 
 # Игнорировать системные файлы
 .DS_Store
-
+help.txt

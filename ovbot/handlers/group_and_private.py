@@ -1,4 +1,5 @@
 import asyncio
+from typing import Dict
 
 from aiogram import Router, types
 from filters.chat_types import (ChatTypesFilter, UserLevelFilter,
@@ -100,7 +101,7 @@ async def handle_stop_reminder_id(message: types.Message):
         else {message.from_user.first_name}
     )
     owner_reminder_id = crypt(message.from_user.id)
-    rem_data = {"chats_id_active": {}}
+    rem_data: Dict[str, Dict] = {"chats_id_active": {}}
     rem_data["chats_id_active"][str(message.chat.id)] = chat_name
 
     try:

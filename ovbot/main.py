@@ -15,7 +15,7 @@ from modules.ovay_bot import OvayBot
 from utils.security import add_super_user_on_bd
 
 
-def create_bot():
+def create_bot() -> OvayBot:
     ovay_bot = OvayBot(BOT_TOKEN, timeout=5, retry_attempts=3)
     ovay_bot.dp.include_router(user_private_router)
     ovay_bot.dp.include_router(api_router)
