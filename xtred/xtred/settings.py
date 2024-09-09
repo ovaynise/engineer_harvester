@@ -193,7 +193,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    SERVER_DOMEN,
+    "https://engineer.sytes.net",
 ]
 
 CORS_URLS_REGEX = r"^/api/.*$"
