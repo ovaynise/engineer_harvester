@@ -17,7 +17,7 @@ services:
     env_file: .env
     volumes:
       - static:/backend_static
-      - media:/media
+      - media:/app/media
   ovbot:
     image: ovaynise/engineer_ovbot
     env_file: .env
