@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 SERVER_IP = os.getenv("SERVER_IP")
 SERVER_DOMEN = os.getenv("SERVER_DOMEN")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 AUTH_USER_MODEL = "users.MyUser"
 LOGIN_REDIRECT_URL = "homepage:index"
