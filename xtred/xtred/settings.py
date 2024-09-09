@@ -196,5 +196,5 @@ CORS_ALLOWED_ORIGINS = [
     SERVER_DOMEN,
     SERVER_IP,
 ]
-CSRF_TRUSTED_ORIGINS = ['https://*.engineer.sytes.net', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [f'https://*.{SERVER_DOMEN}', 'https://*.127.0.0.1']
 CORS_URLS_REGEX = r"^/api/.*$"
