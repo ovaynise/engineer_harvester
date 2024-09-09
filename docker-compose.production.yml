@@ -3,6 +3,7 @@ version: '3'
 volumes:
   pg_data:
   static:
+  media:
 
 services:
   ovaynisedb:
@@ -15,6 +16,7 @@ services:
     env_file: .env
     volumes:
       - static:/backend_static
+      - media:/home/ovaynise/engineer/media/
   ovbot:
     image: ovaynise/engineer_ovbot
     env_file: .env
@@ -24,5 +26,6 @@ services:
     image: ovaynise/engineer_gateway
     volumes:
       - static:/staticfiles/
+      - media:/home/ovaynise/engineer/media/
     ports:
       - 8000:80
