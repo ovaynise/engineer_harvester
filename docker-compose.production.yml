@@ -3,8 +3,6 @@ version: '3'
 volumes:
   pg_data:
   static:
-  media:
-
 
 services:
   ovaynisedb:
@@ -17,7 +15,6 @@ services:
     env_file: .env
     volumes:
       - static:/backend_static
-      - media:/app/media
   ovbot:
     image: ovaynise/engineer_ovbot
     env_file: .env
