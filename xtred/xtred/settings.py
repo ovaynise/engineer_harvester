@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 SERVER_IP = os.getenv("SERVER_IP")
 SERVER_DOMEN = os.getenv("SERVER_DOMEN")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = bool(os.getenv("DEBUG"))
 
 AUTH_USER_MODEL = "users.MyUser"
 LOGIN_REDIRECT_URL = "homepage:index"
@@ -157,7 +157,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / 'collected_static'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/ovaynise/engineer/media/'
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

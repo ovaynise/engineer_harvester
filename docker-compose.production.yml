@@ -12,20 +12,20 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
   xtred:
-    image: ovaynise/engineer_xtred
+    image: ${DOCKER_USERNAME}/engineer_xtred
     env_file: .env
     volumes:
       - static:/backend_static
-      - media:/home/ovaynise/engineer/media/
+      - media:${MEDIA_ROOT}
   ovbot:
-    image: ovaynise/engineer_ovbot
+    image: ${DOCKER_USERNAME}/engineer_ovbot
     env_file: .env
     depends_on:
       - ovaynisedb
   gateway:
-    image: ovaynise/engineer_gateway
+    image: ${DOCKER_USERNAME}/engineer_gateway
     volumes:
       - static:/staticfiles/
-      - media:/home/ovaynise/engineer/media/
+      - media:${MEDIA_ROOT}
     ports:
       - 8000:80
