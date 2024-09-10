@@ -33,10 +33,11 @@ async def ai_reply(message: types.Message):
     await message.answer(f"{ai_assistant.show_ai_answer(user_text)}")
     await message.bot.send_message(
         chat_id=TELEGRAM_GROUP_ID,
-        text=f"{message.from_user.username}"
-             f"-{message.from_user.first_name}"
-             f"-{message.from_user.last_name}:\n"
-             f"Запрошен текст: {user_text}"
+        text=f"@{message.from_user.username} "
+             f"- {message.from_user.first_name}"
+             f"- {message.from_user.last_name}:\n"
+             f"{message.chat.title}\n"
+             f"Запрошен текст:➡️' {user_text}'"
     )
 
 
