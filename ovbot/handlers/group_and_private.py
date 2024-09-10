@@ -30,7 +30,9 @@ async def ai_reply(message: types.Message):
     user_text = message.text
 
     await asyncio.sleep(0.5)
-    await message.answer(f"{ai_assistant.show_ai_answer(user_text)}")
+    formatted_text = ai_assistant.show_ai_answer(user_text)
+
+    await message.answer(f"{formatted_text}", parse_mode="MarkdownV2")
     await message.bot.send_message(
         chat_id=TELEGRAM_GROUP_ID,
         text=f"@{message.from_user.username} "
