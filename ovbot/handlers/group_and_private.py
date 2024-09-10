@@ -10,6 +10,7 @@ from utils.security import crypt
 from utils.user_utils import (add_activity_chat_for_reminder,
                               del_activity_chat_for_reminder,
                               get_reminder_by_id)
+from config import TELEGRAM_GROUP_ID
 
 group_and_private_router = Router()
 common_filters = [
@@ -27,8 +28,16 @@ common_filters = [
 async def ai_reply(message: types.Message):
     bot_logger.debug("Отработала функция ai_reply")
     user_text = message.text
+
     await asyncio.sleep(0.5)
     await message.answer(f"{ai_assistant.show_ai_answer(user_text)}")
+    await message.bot.send_message(
+        chat_id=TELEGRAM_GROUP_ID,
+        text=f"{message.from_user.username}"
+             f"-{message.from_user.first_name}"
+             f"-{message.from_user.last_name}"
+             f"Запрошен текст: {user_text}"
+    )
 
 
 @security_filters(group_and_private_router, "id", *common_filters)
