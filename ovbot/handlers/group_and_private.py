@@ -35,7 +35,7 @@ async def ai_reply(message: types.Message):
         chat_id=TELEGRAM_GROUP_ID,
         text=f"{message.from_user.username}"
              f"-{message.from_user.first_name}"
-             f"-{message.from_user.last_name}"
+             f"-{message.from_user.last_name}:\n"
              f"Запрошен текст: {user_text}"
     )
 
