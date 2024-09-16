@@ -1,13 +1,50 @@
 {% extends "base.html" %}
 {% block title %}О проекте{% endblock %}
+
 {% block content %}
 <main>
   <div class="container py-5">
-    <h1>О проекте</h1>
-    <p>
-      Engineer - скоро тут будет описание
+    <h1 class="mb-4">О проекте ©️Engineer</h1>
+
+    <h2 class="text-muted">(Beta)</h2>
+
+    <p class="lead">
+      ©️Engineer — это многофункциональная платформа для управления инженерными проектами. Она включает базу данных для отслеживания проектов, подрядчиков и исполнителей, а также функционал для создания отчетов и управления гарантийными обязательствами.
     </p>
 
+    <h3 class="mt-5">Основные функции</h3>
+    <ul>
+      <li>Управление проектами</li>
+      <li>База данных подрядчиков и исполнителей</li>
+      <li>Формирование отчетов</li>
+      <li>Управление гарантийными обязательствами</li>
+      <li>REST API для интеграции с внешними сервисами</li>
+    </ul>
+
+    <h3 class="mt-5">Асинхронный Telegram-бот</h3>
+    <p>
+      <a href="https://t.me/xtred_bot" target="_blank">Асинхронный Telegram-бот с ИИ</a> с возможностью установки напоминаний, информирования о погоде и управления уровнями доступа для администратора.
+    </p>
+
+    <h3 class="mt-5">Использованные технологии</h3>
+    <ul>
+      <li><strong>Backend:</strong> Python, Django REST Framework, PostgreSQL</li>
+      <li><strong>Фронтенд:</strong> [можно добавить, если есть]</li>
+      <li><strong>Асинхронная работа с ботом:</strong> Aiogram</li>
+      <li><strong>Веб-сервер:</strong> Gunicorn, Nginx</li>
+      <li><strong>Аутентификация и авторизация:</strong> DJOSER</li>
+      <li><strong>Контейнеризация:</strong> Docker, Docker-compose</li>
+      <li><strong>CI/CD:</strong> GitHub Actions</li>
+    </ul>
+
+    <h3 class="mt-5">Автоматизация деплоя</h3>
+    <p>
+      Проект использует GitHub Actions для CI/CD. Автоматическое развёртывание происходит при каждом пуше в ветку main.
+    </p>
+
+    <footer class="mt-5">
+      <p>Создатель проекта: <a href="https://github.com/ovaynise" target="_blank">@ovaynise - GitHub</a></p>
+    </footer>
   </div>
-  </main>
+</main>
 {% endblock %}

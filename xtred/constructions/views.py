@@ -117,7 +117,7 @@ class LocationListView(LoginRequiredMixin, ListView):
 class LocationCreateView(LoginRequiredMixin, CreateView):
     model = Location
     form_class = LocationForm
-    success_url = reverse_lazy("constructions:constructions")
+    success_url = reverse_lazy("constructions:location")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -141,7 +141,7 @@ class BrandTypeListView(LoginRequiredMixin, ListView):
 class BrandTypeCreateView(LoginRequiredMixin, CreateView):
     model = BrandType
     form_class = BrandTypeForm
-    success_url = reverse_lazy("constructions:constructions")
+    success_url = reverse_lazy("constructions:brandtype")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -163,13 +163,13 @@ class ConstructionsCompanyUpdateView(
 ):
     model = ConstructionsCompany
     form_class = ConstructionsCompanyForm
-    success_url = reverse_lazy("constructions:constructions")
+    success_url = reverse_lazy("constructions:constructions_company")
 
 
 class ConstructionsCompanyCreateView(LoginRequiredMixin, CreateView):
     model = ConstructionsCompany
     form_class = ConstructionsCompanyForm
-    success_url = reverse_lazy("constructions:constructions")
+    success_url = reverse_lazy("constructions:constructions_company")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
