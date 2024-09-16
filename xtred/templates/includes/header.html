@@ -6,7 +6,6 @@
         <img src="{% static 'img/logo.png' %}" height="50" class="d-inline-block align-top" alt="Logo">
       </a>
 
-      <!-- Добавляем кнопку "гамбургер" для мобильных устройств -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -15,27 +14,28 @@
         <div class="d-flex justify-content-between w-100">
           <div class="d-flex">
             {% if user.is_authenticated %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-dark">
+            <div class="btn-group flex-wrap" role="group" aria-label="Basic outlined example">
+
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'homepage:index' %} active {% endif %}" href="{% url 'homepage:index' %}">Главная</a>
               </button>
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'constructions:constructions' %} active {% endif %}" href="{% url 'constructions:constructions' %}">Объекты</a>
               </button>
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'constructions:constructions_company' %} active {% endif %}" href="{% url 'constructions:constructions_company' %}">Подрядчики</a>
               </button>
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'constructions:location' %} active {% endif %}" href="{% url 'constructions:location' %}">Локация</a>
               </button>
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'constructions:brandtype' %} active {% endif %}" href="{% url 'constructions:brandtype' %}">Бренд</a>
               </button>
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'about:description' %} active {% endif %}" href="{% url 'about:description' %}">О сайте</a>
               </button>
               {% if user.is_staff %}
-              <button type="button" class="btn btn-outline-dark">
+                <button type="button" class="btn btn-outline-dark mb-2">
                 <a class="nav-link {% if view_name == 'reminders:reminders' %} active {% endif %}" href="{% url 'reminders:reminders' %}">Напоминания</a>
               </button>
               {% endif %}
