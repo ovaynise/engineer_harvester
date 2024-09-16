@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
       .navbar-toggler {
-        background-color: transparent; /* Прозрачный фон для кнопки */
+        background-color: transparent;
         border: none;
       }
       .navbar-toggler-icon {
-        background-size: 1.5em 1.5em; /* Размер иконки гамбургера */
+        background-size: 1.5em 1.5em;
         background-repeat: no-repeat;
         background-position: center;
         filter: invert(1) brightness(0) saturate(100%) hue-rotate(0deg);
@@ -21,7 +21,7 @@
       .navbar-toggler-user {
         background-color: transparent;
         border: none;
-        color: #fff; /* Цвет иконки */
+        color: #fff;
       }
       .btn-group {
         display: flex;
@@ -29,6 +29,11 @@
       }
       .btn-group .btn {
         margin-bottom: 0;
+      }
+      .navbar-nav {
+        display: flex;
+        justify-content: flex-end;
+        flex: 1;
       }
     </style>
 </head>
@@ -47,7 +52,7 @@
 
       <!-- Кнопка для меню пользователя -->
       <button class="navbar-toggler text-dark navbar-toggler-user" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUserNav" aria-controls="navbarUserNav" aria-expanded="false" aria-label="Toggle user menu">
-        <i class="fas fa-user"></i> <!-- Иконка человечка -->
+        <i class="fas fa-user"></i>
       </button>
 
       <!-- Основное меню -->
@@ -86,7 +91,7 @@
       </div>
 
       <!-- Меню пользователя -->
-      <div class="collapse navbar-collapse" id="navbarUserNav">
+      <div class="collapse navbar-collapse navbar-nav" id="navbarUserNav">
         <div class="d-flex align-items-center">
           {% if user.is_authenticated %}
           <div class="btn-group flex-wrap" role="group" aria-label="Basic outlined example">
