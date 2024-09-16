@@ -1,16 +1,17 @@
 import hashlib
 import hmac
-import time
-from django.shortcuts import render
-from django.http import HttpResponse
 import os
+import time
 
+from django.http import HttpResponse
+from django.shortcuts import render
 from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
 
 # Получите токен вашего бота
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+
 
 def telegram_auth(request):
     # Получаем параметры из запроса
@@ -23,13 +24,18 @@ def telegram_auth(request):
     received_hash = request.GET.get('hash')
 
     # Собираем строку для проверки (data-check-string)
-    data_check_string = f"auth_date={auth_date}\nfirst_name={first_name}\nid={id}\nusername={username}"
+    data_check_string = (f"auth_date={auth_date}"
+                         f"\nfirst_name={first_name}\nid={id}"
+                         f"\nusername={username}")
 
     # Вычисляем секретный ключ как SHA256 от токена бота
     secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
 
     # Проверяем HMAC-SHA256 подпись
-    calculated_hash = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
+    calculated_hash = hmac.new(
+        secret_key,
+        data_check_string.encode(),
+        hashlib.sha256).hexdigest()
 
     if calculated_hash == received_hash:
         # Проверяем, что данные не устарели

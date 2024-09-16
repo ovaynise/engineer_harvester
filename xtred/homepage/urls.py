@@ -1,7 +1,7 @@
+from auth_telegram import telegram_auth
 from django.urls import path
 
 from . import views
-from auth_telegram import telegram_auth
 
 app_name = "homepage"
 urlpatterns = [
