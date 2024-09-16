@@ -11,24 +11,27 @@ services:
     image: postgres:14.5
     env_file: .env
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - ${MEDIA_ROOT_LOCAL}/db:/var/lib/postgresql/data
   xtred:
     build: ./xtred/
     env_file: .env
     volumes:
       - static:/backend_static
-      - media:/home/ovaynise/engineer/media/
+      - media:/Users/el/dev/media/media
   ovbot:
     build: ./ovbot/
     env_file: .env
+    environment:
+      BEARER_TOKEN: ${BEARER_TOKEN_LOCAL}
+      URL_SERVER: ${URL_SERVER_LOCAL}
     volumes:
-      - media:/home/ovaynise/engineer/media/
+      - media:${MEDIA_ROOT_LOCAL}
     depends_on:
       - ovaynisedb
   gateway:
     build: ./gateway/
     volumes:
       - static:/staticfiles/
-      - media:/home/ovaynise/engineer/media/
+      - media:/Users/el/dev/media/media
     ports:
       - 8000:80

@@ -3,14 +3,6 @@
 Главная
 {% endblock %}
 {% block content %}
-{% if user.is_authenticated %}
-  <div class="container">
-        <div class="row mb-4">
-      <div class="col-12">
-        {% include "includes/focus_object_card.html" %}
-      </div>
-    </div>
-    {% endif %}
     <div class="row">
       <div class="col-md-6">
         {% include "includes/statistic_card.html" %}
