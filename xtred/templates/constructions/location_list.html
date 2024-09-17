@@ -21,8 +21,6 @@
     <tr>
       <th scope="col">№</th>
       <th scope="col">Город</th>
-      <th scope="col">Всего объектов в городе</th>
-      <th scope="col">Объектов в монтаже сейчас</th>
       <th scope="col">Страна</th>
       <th scope="col">Дата создания</th>
       <th scope="col">Кто создал</th>
@@ -33,8 +31,6 @@
       <tr>
         <th scope="row">{{ forloop.counter }}</th> <!-- Нумерация строк -->
         <td>{{  location.city }}</td>
-        <td>{{ location.constructions_count }}</td>
-        <td>{{ location.constructions_count }}</td>
         <td>{{  location.country }}</td>
         <td>{{  location.created_at }}</td>
         <td>
