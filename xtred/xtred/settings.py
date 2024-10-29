@@ -205,7 +205,7 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [f'https://*.{SERVER_DOMEN}', 'https://*.127.0.0.1']
 CORS_URLS_REGEX = r"^/api/.*$"
 
-CELERY_BROKER_URL = REDIS_HOST+'/0'
+CELERY_BROKER_URL = REDIS_HOST + '/0'
 CELERY_TIMEZONE = "Europe/Minsk"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
@@ -216,8 +216,8 @@ CELERY_RESULT_BACKEND = 'django-db'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': REDIS_HOST+'/1',
+        'LOCATION': REDIS_HOST + '/1',
     }
 }
 CELERY_CACHE_BACKEND = 'default'
-CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
