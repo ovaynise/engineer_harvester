@@ -1,4 +1,3 @@
-version: '3'
 
 volumes:
   pg_data:
@@ -23,7 +22,7 @@ services:
       - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
-      - media:/Users/el/dev/media/media
+      - media:${MEDIA_ROOT_LOCAL}
     depends_on:
       - ovaynisedb
   ovbot:
@@ -42,7 +41,7 @@ services:
     build: ./gateway/
     volumes:
       - static:/staticfiles/
-      - media:/Users/el/dev/media/media
+      - media:${MEDIA_ROOT_LOCAL}
     ports:
       - 8000:80
     env_file: .env
@@ -60,7 +59,7 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
     volumes:
       - static:/backend_static
-      - media:/Users/el/dev/media/media
+      - media:${MEDIA_ROOT_LOCAL}
 
   celery-beat:
     build: ./xtred/
@@ -73,4 +72,4 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
     volumes:
       - static:/backend_static
-      - media:/Users/el/dev/media/media
+      - media:${MEDIA_ROOT_LOCAL}
