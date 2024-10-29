@@ -19,8 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 SERVER_IP = os.getenv("SERVER_IP")
 SERVER_DOMEN = os.getenv("SERVER_DOMEN")
+REDIS_HOST = os.getenv("REDIS_HOST")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 AUTH_USER_MODEL = "users.MyUser"
 LOGIN_REDIRECT_URL = "homepage:index"
@@ -64,6 +65,8 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg",
     "corsheaders",
+    "django_celery_results",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -201,3 +204,20 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CSRF_TRUSTED_ORIGINS = [f'https://*.{SERVER_DOMEN}', 'https://*.127.0.0.1']
 CORS_URLS_REGEX = r"^/api/.*$"
+
+CELERY_BROKER_URL = REDIS_HOST+'/0'
+CELERY_TIMEZONE = "Europe/Minsk"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'django-db'
+
+
+# django setting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': REDIS_HOST+'/1',
+    }
+}
+CELERY_CACHE_BACKEND = 'default'
+CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
