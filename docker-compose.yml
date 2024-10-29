@@ -7,9 +7,7 @@ volumes:
 
 services:
   redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
+    image: "redis:6.2-alpine"
     environment:
       - TZ=Europe/Minsk
   ovaynisedb:
@@ -20,15 +18,22 @@ services:
   xtred:
     build: ./xtred/
     env_file: .env
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
       - media:/Users/el/dev/media/media
+    depends_on:
+      - ovaynisedb
   ovbot:
     build: ./ovbot/
     env_file: .env
     environment:
-      BEARER_TOKEN: ${BEARER_TOKEN_LOCAL}
-      URL_SERVER: ${URL_SERVER_LOCAL}
+      - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - BEARER_TOKEN=${BEARER_TOKEN_LOCAL}
+      - URL_SERVER=${URL_SERVER_LOCAL}
+      - TZ=Europe/Minsk
     volumes:
       - media:${MEDIA_ROOT_LOCAL}
     depends_on:
@@ -40,3 +45,32 @@ services:
       - media:/Users/el/dev/media/media
     ports:
       - 8000:80
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
+  celery:
+    build: ./xtred/
+    command: celery -A xtred worker --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - ovaynisedb
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+    volumes:
+      - static:/backend_static
+      - media:/Users/el/dev/media/media
+
+  celery-beat:
+    build: ./xtred/
+    command: celery -A xtred beat --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - ovaynisedb
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+    volumes:
+      - static:/backend_static
+      - media:/Users/el/dev/media/media
