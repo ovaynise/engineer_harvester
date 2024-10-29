@@ -51,7 +51,7 @@ services:
       - TZ=Europe/Minsk
 
   celery:
-    build: ./xtred/
+    image: ${DOCKER_USERNAME}/engineer_xtred
     command: celery -A xtred worker --loglevel=info
     env_file: .env
     depends_on:
@@ -64,7 +64,7 @@ services:
       - media:${MEDIA_ROOT}
 
   celery-beat:
-    build: ./xtred/
+    image: ${DOCKER_USERNAME}/engineer_xtred
     command: celery -A xtred beat --loglevel=info
     env_file: .env
     depends_on:
