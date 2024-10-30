@@ -1,3 +1,4 @@
+version: '3.8'
 
 volumes:
   pg_data:
@@ -9,11 +10,13 @@ services:
     image: "redis:6.2-alpine"
     environment:
       - TZ=Europe/Minsk
+
   ovaynisedb:
     image: postgres:14.5
     env_file: .env
     volumes:
       - ${MEDIA_ROOT_LOCAL}/db:/var/lib/postgresql/data
+
   xtred:
     build: ./xtred/
     env_file: .env
@@ -23,8 +26,10 @@ services:
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT_LOCAL}
+      - ${LOG_FILE_PATH_LOCAL}:/app/logs
     depends_on:
       - ovaynisedb
+
   ovbot:
     build: ./ovbot/
     env_file: .env
@@ -35,19 +40,23 @@ services:
       - TZ=Europe/Minsk
     volumes:
       - media:${MEDIA_ROOT_LOCAL}
+      - ${LOG_FILE_PATH_LOCAL}:/app/logs
     depends_on:
       - ovaynisedb
+
   gateway:
     build: ./gateway/
     volumes:
       - static:/staticfiles/
       - media:${MEDIA_ROOT_LOCAL}
+      - ${LOG_FILE_PATH_LOCAL}:/app/logs
     ports:
       - 8000:80
     env_file: .env
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
       - TZ=Europe/Minsk
+
   celery:
     build: ./xtred/
     command: celery -A xtred worker --loglevel=info
@@ -57,9 +66,11 @@ services:
       - ovaynisedb
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT_LOCAL}
+      - ${LOG_FILE_PATH_LOCAL}:/app/logs
 
   celery-beat:
     build: ./xtred/
@@ -70,6 +81,8 @@ services:
       - ovaynisedb
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT_LOCAL}
+      - ${LOG_FILE_PATH_LOCAL}:/app/logs

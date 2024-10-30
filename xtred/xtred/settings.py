@@ -20,7 +20,6 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 SERVER_IP = os.getenv("SERVER_IP")
 SERVER_DOMEN = os.getenv("SERVER_DOMEN")
 REDIS_HOST = os.getenv("REDIS_HOST")
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 AUTH_USER_MODEL = "users.MyUser"
@@ -145,13 +144,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru-RU"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Europe/Minsk'
+USE_TZ = True
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

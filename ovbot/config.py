@@ -1,6 +1,7 @@
 import os
 
 from dotenv import find_dotenv, load_dotenv
+from modules.ovay_logger import OvayLogger
 
 load_dotenv(find_dotenv())
 
@@ -11,15 +12,24 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CMC_API_KEY = os.getenv("CMC_API_KEY")
 crypto_url = os.getenv("CRYPTO_URL")
 URL_SERVER_API = os.getenv("URL_SERVER_API")
-log_file_path = os.getenv("BOT_LOG_FILE_PATH", "/app/logs/bot_log.log")
-log_file_path2 = os.getenv("DB_LOG_FILE_PATH", "/app/logs/db_log.log")
-log_file_path3 = os.getenv("OTHER_LOG_FILE_PATH", "/app/logs/other_log.log")
 API_WEATHER_KEY = os.getenv("WEATHER_API_key")
 SUPER_USER_ID = os.getenv("SUPER_USER_ID")
 AI_API_KEY = os.getenv("AI_API_KEY")
 AI_URL_API = os.getenv("AI_URL_API")
 AI_BALANCE_URL = os.getenv("AI_BALANCE_URL")
+LOG_FILE_PATH = "./logs"
 SALT = os.getenv("SALT")
+
+logger_bot = OvayLogger(
+    name="logger_bot",
+    log_file_base_path=LOG_FILE_PATH).get_logger()
+
+logger_db = OvayLogger(
+    name="logger_db",
+    log_file_base_path=LOG_FILE_PATH).get_logger()
+logger_other = OvayLogger(
+    name="logger_other",
+    log_file_base_path=LOG_FILE_PATH).get_logger()
 
 endpoint_reminder = "reminders/"
 endpoint_entity = "entity/"

@@ -4,7 +4,7 @@ import os
 from config import endpoint_tg_users
 from dotenv import find_dotenv, load_dotenv
 from inits.api_client import api_ov_client
-from inits.logger import db_logger
+from config import logger_db
 
 load_dotenv(find_dotenv())
 
@@ -26,7 +26,7 @@ async def add_super_user_on_bd(user_hash_id):
         if user_response["count"] > 0:
             user_in_bd = user_response["results"][0]["tg_user_id"]
             if user_hash_id == user_in_bd:
-                db_logger.debug("Супер Пользователь успешно найден в БД")
+                logger_db.debug("Супер Пользователь успешно найден в БД")
                 return
         api_data = {
             "tg_user_id": user_hash_id,
@@ -37,10 +37,10 @@ async def add_super_user_on_bd(user_hash_id):
             "level": 0,
         }
         await api_ov_client.post(endpoint_tg_users, api_data)
-        db_logger.debug("Супер Пользователь! Успешно зарегистрирован!")
+        logger_db.debug("Супер Пользователь! Успешно зарегистрирован!")
     except ValueError:
-        db_logger.error("Произошла ошибка при обработке ID пользователя.")
+        logger_db.error("Произошла ошибка при обработке ID пользователя.")
     except KeyError:
-        db_logger.error("Произошла ошибка при доступе к данным пользователя.")
+        logger_db.error("Произошла ошибка при доступе к данным пользователя.")
     except Exception as e:
-        db_logger.error(f"Произошла ошибка: {e}")
+        logger_db.error(f"Произошла ошибка: {e}")

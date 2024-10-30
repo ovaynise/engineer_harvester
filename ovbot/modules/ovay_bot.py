@@ -2,7 +2,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.exceptions import TelegramNetworkError
-from inits.logger import bot_logger
+from config import logger_bot
 
 
 class OvayBot:
@@ -14,13 +14,13 @@ class OvayBot:
 
     async def start(self):
         bot = self.bot
-        bot_logger.debug(f"Создан объект бота {bot}")
+        logger_bot.debug(f"Создан объект бота {bot}")
         dp = self.dp
-        bot_logger.debug(f"Создан объект диспетчера {dp}")
+        logger_bot.debug(f"Создан объект диспетчера {dp}")
         for attempt in range(self.retry_attempts):
             try:
                 await bot.delete_webhook(drop_pending_updates=True)
-                bot_logger.debug("Webhook deleted.")
+                logger_bot.debug("Webhook deleted.")
 
                 commands = [
                     types.BotCommand(
@@ -34,19 +34,19 @@ class OvayBot:
                     scope=types.BotCommandScopeAllPrivateChats(),
                 )
                 await dp.start_polling(bot, timeout=self.timeout)
-                bot_logger.debug("Запущен процесс polling")
+                logger_bot.debug("Запущен процесс polling")
                 break
             except TelegramNetworkError as e:
-                bot_logger.error(
+                logger_bot.error(
                     f"Ошибка сети: {e}. Повторная "
                     f"попытка... (попытка {attempt + 1})"
                 )
                 await asyncio.sleep(5)
             except Exception as e:
-                bot_logger.error(f"Необработанная ошибка: {e}")
+                logger_bot.error(f"Необработанная ошибка: {e}")
                 await asyncio.sleep(5)
         else:
-            bot_logger.error(
+            logger_bot.error(
                 f"Не удалось запустить бота "
                 f"после {self.retry_attempts} попыток."
             )
@@ -54,13 +54,13 @@ class OvayBot:
 
     def run(self):
         asyncio.run(self.start())
-        bot_logger.debug("Запущена функция run бота на asyncio")
+        logger_bot.debug("Запущена функция run бота на asyncio")
 
     async def info_message(self, chat_id, message):
         try:
             await self.bot.send_message(chat_id, message)
-            bot_logger.debug(
+            logger_bot.debug(
                 f'Бот отправил сообщение "{message}" в чат {chat_id}'
             )
         except Exception as e:
-            bot_logger.error(f"Ошибка при отправке сообщения: {e}")
+            logger_bot.error(f"Ошибка при отправке сообщения: {e}")

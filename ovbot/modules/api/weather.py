@@ -1,12 +1,12 @@
 import requests
 from config import API_WEATHER_KEY, CITIES
-from inits.logger import other_logger
+from config import logger_other
 
 
 class WeatherShow:
     def __init__(self, city):
         if city not in CITIES:
-            other_logger.error(f"Город {city} не найден в списке.")
+            logger_other.error(f"Город {city} не найден в списке.")
             raise ValueError(f"Город {city} не найден в списке.")
         self.city = city
         self.lat, self.lon = CITIES[city]
@@ -22,14 +22,14 @@ class WeatherShow:
             f"appid={API_WEATHER_KEY}&lang=ru"
         )
         response = requests.get(URL)
-        other_logger.debug(
+        logger_other.debug(
             f"Успешно получен ответ от сервера погода: {response.status_code}"
         )
         return response.json()
 
     def get_name(self):
         response = self.get_api_answer()
-        other_logger.debug(
+        logger_other.debug(
             f"Успешно получен запрос имени: {response.status_code}"
         )
         return response.get("name")
@@ -51,5 +51,5 @@ class WeatherShow:
             f"\n Ощущается как {temp_feels_like} С"
             f"\n Скорость ветра {wind_speed} м/с"
         )
-        other_logger.debug("Функция вернула сформированное сообщение message ")
+        logger_other.debug("Функция вернула сформированное сообщение message ")
         return message

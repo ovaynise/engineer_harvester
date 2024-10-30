@@ -10,7 +10,7 @@ from handlers.group_commands import group_commands_router
 from handlers.reminder_handler import reminder_router
 from handlers.super_user_handler import super_user_router
 from handlers.user_private import user_private_router
-from inits.logger import bot_logger
+from config import logger_bot
 from modules.ovay_bot import OvayBot
 from utils.security import add_super_user_on_bd
 
@@ -44,5 +44,5 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except Exception as e:
-        bot_logger.error(f"Ошибка {e}")
+        logger_bot.error(f"Ошибка {e}")
         raise

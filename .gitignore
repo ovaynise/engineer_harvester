@@ -265,16 +265,20 @@ commands.txt
 
 # Игнорировать все файлы в папке ovbot/logs
 ovbot/logs/*
+xtred/logs/*
 
 # Не игнорировать саму папку logs
 !ovbot/logs/
+!xtred/logs/
 
 # Не игнорировать файл .keep в папке ovbot/logs
 !ovbot/logs/.keep
-
+!xtred/logs/.keep
 # Игнорировать медиа-файлы
 **/media/
 
 # Игнорировать системные файлы
 .DS_Store
 help.txt
+logs/
+logs/*

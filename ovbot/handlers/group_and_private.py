@@ -6,7 +6,7 @@ from config import TELEGRAM_GROUP_ID
 from filters.chat_types import (ChatTypesFilter, UserLevelFilter,
                                 UserLevelRangeFilter, security_filters)
 from inits.ai_client import ai_assistant
-from inits.logger import bot_logger
+from config import logger_bot
 from utils.security import crypt
 from utils.user_utils import (add_activity_chat_for_reminder,
                               del_activity_chat_for_reminder,
@@ -26,7 +26,7 @@ common_filters = [
     *common_filters,
 )
 async def ai_reply(message: types.Message):
-    bot_logger.debug("Отработала функция ai_reply")
+    logger_bot.debug("Отработала функция ai_reply")
     user_text = message.text
 
     await asyncio.sleep(0.5)
@@ -43,7 +43,7 @@ async def ai_reply(message: types.Message):
 
 @security_filters(group_and_private_router, "id", *common_filters)
 async def show_id(message: types.Message):
-    bot_logger.debug("Отработала функция id")
+    logger_bot.debug("Отработала функция id")
     await message.answer(
         f"Ваш id: {message.from_user.id}, "
         f"id чата: {message.chat.id}, "
@@ -88,7 +88,7 @@ async def handle_start_reminder_id(message: types.Message):
             await message.answer(f"У вас нет напоминания с ID : {reminder_id}")
 
     except Exception as e:
-        bot_logger.error(f"Получена ошибка: {e}")
+        logger_bot.error(f"Получена ошибка: {e}")
 
 
 @security_filters(group_and_private_router, "стоп", *common_filters)

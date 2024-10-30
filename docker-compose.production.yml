@@ -29,6 +29,7 @@ services:
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT}
+      - ${LOG_FILE_PATH}:/app/logs
 
   ovbot:
     image: ${DOCKER_USERNAME}/engineer_ovbot
@@ -38,12 +39,16 @@ services:
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
       - TZ=Europe/Minsk
+    volumes:
+      - media:${MEDIA_ROOT}
+      - ${LOG_FILE_PATH}:/app/logs
 
   gateway:
     image: ${DOCKER_USERNAME}/engineer_gateway
     volumes:
       - static:/staticfiles/
       - media:${MEDIA_ROOT}
+      - ${LOG_FILE_PATH}:/app/logs
     ports:
       - 8000:80
     environment:
@@ -59,9 +64,11 @@ services:
       - ovaynisedb
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT}
+      - ${LOG_FILE_PATH}:/app/logs
 
   celery-beat:
     image: ${DOCKER_USERNAME}/engineer_xtred
@@ -72,6 +79,8 @@ services:
       - ovaynisedb
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST_DOCKER}
+      - TZ=Europe/Minsk
     volumes:
       - static:/backend_static
       - media:${MEDIA_ROOT}
+      - ${LOG_FILE_PATH}:/app/logs

@@ -1,5 +1,5 @@
 import requests
-from inits.logger import other_logger
+from config import logger_other
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
 
@@ -14,7 +14,7 @@ class Crypto:
             response = requests.get(
                 self.url, headers=self.headers, params=self.params
             )
-            other_logger.debug(
+            logger_other.debug(
                 f"Успешно получили ответ "
                 f"Крипто сервера: {response.status_code}"
             )
@@ -26,8 +26,8 @@ class Crypto:
                 .get("price")
             )
             symbol = response.json().get("data")[0].get("name")
-            other_logger.debug("Успешно сформировали сообщение для отправки")
+            logger_other.debug("Успешно сформировали сообщение для отправки")
             return f"{symbol} : {round(price,2)} $"
 
         except (ConnectionError, Timeout, TooManyRedirects) as e:
-            other_logger.error(f"Ошибка - {e}")
+            logger_other.error(f"Ошибка - {e}")

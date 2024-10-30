@@ -44,7 +44,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 class UsersListView(LoginRequiredMixin, ListView):
     model = User
     ordering = "id"
-    paginate_by = 10
+    paginate_by = 12
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_superuser:
@@ -53,5 +53,7 @@ class UsersListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["telegram_users"] = TelegramUserModel.objects.all()
+        context["telegram_users"] = (TelegramUserModel.
+                                     objects.all().
+                                     order_by('tg_user_id'))
         return context

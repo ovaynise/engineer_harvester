@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from config import endpoint_reminder
 from filters.chat_types import ChatTypesFilter, UserLevelFilter
 from inits.api_client import api_ov_client
-from inits.logger import bot_logger
+from config import logger_bot
 from keyboards.kb_reply import get_keyboard
 from utils.reminder_func import days_or_months, extract_time_intervals
 from utils.security import crypt
@@ -84,7 +84,7 @@ async def get_bat(message: types.Message, bot: Bot):
             "Что Вы хотите выполнить?",
             reply_markup=REMINDER_KB,
         )
-        bot_logger.info("🔢Запущено создание напоминания")
+        logger_bot.info("🔢Запущено создание напоминания")
     elif message.text in [
         "▶️ Запустить напоминание",
         "⏸ Остановить напоминание",
@@ -94,7 +94,7 @@ async def get_bat(message: types.Message, bot: Bot):
             "Приступим к выполнению:",
             reply_markup=REMINDER_KB,
         )
-        bot_logger.info("🔢Запущено выполнение напоминания")
+        logger_bot.info("🔢Запущено выполнение напоминания")
     elif chat_type in ["group", "supergroup"]:
         await bot.send_chat_action(message.chat.id, "typing")
         await bot.send_message(
@@ -102,14 +102,14 @@ async def get_bat(message: types.Message, bot: Bot):
             "Приступим к созданию:",
             reply_markup=REMINDER_KB,
         )
-        bot_logger.info("🔢Запущено создание напоминания в групповом чате")
+        logger_bot.info("🔢Запущено создание напоминания в групповом чате")
     else:
         await bot.send_message(
             message.from_user.id,
             "Что Вы хотите выполнить?",
             reply_markup=REMINDER_KB,
         )
-        bot_logger.info("🔢Запущено создание напоминания в личном чате")
+        logger_bot.info("🔢Запущено создание напоминания в личном чате")
 
 
 @reminder_router.message(F.text == "▪ Создать напоминание")

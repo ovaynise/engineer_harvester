@@ -1,6 +1,6 @@
 from config import LEVEL_RANGS, endpoint_reminder, endpoint_tg_users
 from inits.api_client import api_ov_client
-from inits.logger import bot_logger, db_logger
+from config import logger_db, logger_bot
 from utils.security import crypt
 
 
@@ -27,13 +27,13 @@ async def check_and_register_user(message):
             f"зарегистрированы"
         )
     except ValueError:
-        db_logger.error("Произошла ошибка при обработке ID пользователя.")
+        logger_db.error("Произошла ошибка при обработке ID пользователя.")
         return False, "Произошла ошибка при обработке ID пользователя."
     except KeyError:
-        db_logger.error("Произошла ошибка при доступе к данным пользователя.")
+        logger_db.error("Произошла ошибка при доступе к данным пользователя.")
         return False, "Произошла ошибка при доступе к данным пользователя."
     except Exception as e:
-        db_logger.error(f"Произошла ошибка: {e}")
+        logger_db.error(f"Произошла ошибка: {e}")
         return False, f"Произошла ошибка: {e}"
 
 
@@ -57,13 +57,13 @@ async def update_user_level(message, new_level):
         return True, f"Ваш уровень успешно обновлен до {new_level}"
 
     except ValueError:
-        db_logger.error("Произошла ошибка при обработке ID пользователя.")
+        logger_db.error("Произошла ошибка при обработке ID пользователя.")
         return False, "Произошла ошибка при обработке ID пользователя."
     except KeyError:
-        db_logger.error("Произошла ошибка при доступе к данным пользователя.")
+        logger_db.error("Произошла ошибка при доступе к данным пользователя.")
         return False, "Произошла ошибка при доступе к данным пользователя."
     except Exception as e:
-        db_logger.error(f"Произошла ошибка: {e}")
+        logger_db.error(f"Произошла ошибка: {e}")
         return False, f"Произошла ошибка: {e}"
 
 
@@ -86,7 +86,7 @@ async def get_user_data(tg_user_id):
             return response["results"][0]
         return None
     except Exception as e:
-        bot_logger.error(f"Ошибка при получении данных пользователя: {e}")
+        logger_bot.error(f"Ошибка при получении данных пользователя: {e}")
         return None
 
 
@@ -101,7 +101,7 @@ async def get_user_level(tg_user_id):
         else:
             return 16
     except Exception as e:
-        bot_logger.error(f"Ошибка при получении уровня пользователя: {e}")
+        logger_bot.error(f"Ошибка при получении уровня пользователя: {e}")
         return None
 
 
@@ -117,7 +117,7 @@ async def get_reminder_by_id(reminder_id):
         else:
             return False
     except Exception as e:
-        bot_logger.error(f"Ошибка : {e}")
+        logger_bot.error(f"Ошибка : {e}")
         return None
 
 
@@ -131,7 +131,7 @@ async def add_activity_chat_for_reminder(reminder_id, data):
         }
         await api_ov_client.patch(endpoint_reminder, updated_data, reminder_id)
     except Exception as e:
-        bot_logger.error(f"Ошибка: {e}")
+        logger_bot.error(f"Ошибка: {e}")
         return None
 
 
@@ -159,5 +159,5 @@ async def del_activity_chat_for_reminder(reminder_id, data):
         await api_ov_client.patch(endpoint_reminder, updated_data, reminder_id)
 
     except Exception as e:
-        bot_logger.error(f"Ошибка: {e}")
+        logger_bot.error(f"Ошибка: {e}")
         return None

@@ -3,7 +3,7 @@ from typing import Callable
 
 from aiogram import Router, types
 from aiogram.filters import Command, Filter
-from inits.logger import bot_logger
+from config import logger_bot
 from utils.security import crypt
 from utils.user_utils import get_user_level
 
@@ -28,7 +28,7 @@ def log_filter_result(
         if user_level is not None
         else ""
     )
-    bot_logger.debug(
+    logger_bot.debug(
         f'{status}Команда "/{command}": Фильтр {filter_name}: '
         f'доступ {"разрешен" if result else "запрещен"}.\n'
         f"{user_info}{level_info}"
@@ -56,7 +56,7 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
                 ):
                     return
 
-            bot_logger.debug(f"🟢Фильтры пройдены для пользователя {username}")
+            logger_bot.debug(f"🟢Фильтры пройдены для пользователя {username}")
             return await handler(message)
 
         if command:
@@ -161,7 +161,7 @@ class IsAnonymousUser(Filter):
         chat_title: str,
     ) -> bool:
         if message.from_user.is_bot or message.from_user.id is None:
-            bot_logger.debug(
+            logger_bot.debug(
                 f'🟡Команда "/{command}": Фильтр '
                 f"IsAnonymousUser: пользователь анонимен или бот.\n"
                 f"Пользователь @{username} ({user_firstname}) в "
