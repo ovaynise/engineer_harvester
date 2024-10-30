@@ -7,9 +7,6 @@ import pytz
 
 
 class OvayLogger:
-    general_log_file_name = "logger_general.log"
-    _general_handler = None
-
     def __init__(self, name, log_file_base_path):
         self.name = name
         self.log_file_base_path = log_file_base_path
@@ -17,9 +14,8 @@ class OvayLogger:
         self.setup_logging()
 
     def setup_logging(self):
-        log_file_path = os.path.join(
-            self.log_file_base_path,
-            f"{self.name}.log")
+        log_file_path = os.path.join(self.log_file_base_path,
+                                     f"{self.name}.log")
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
 
         formatter = self.OvayFormatter(
@@ -33,14 +29,6 @@ class OvayLogger:
                                       backupCount=5)
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-        if OvayLogger._general_handler is None:
-            general_log_path = os.path.join(self.log_file_base_path,
-                                            self.general_log_file_name)
-            OvayLogger._general_handler = RotatingFileHandler(
-                general_log_path, maxBytes=50000000, backupCount=5
-            )
-            OvayLogger._general_handler.setFormatter(formatter)
-        self.logger.addHandler(OvayLogger._general_handler)
 
     class OvayFormatter(logging.Formatter):
         def converter(self, timestamp):

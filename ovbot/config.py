@@ -17,6 +17,7 @@ SUPER_USER_ID = os.getenv("SUPER_USER_ID")
 AI_API_KEY = os.getenv("AI_API_KEY")
 AI_URL_API = os.getenv("AI_URL_API")
 AI_BALANCE_URL = os.getenv("AI_BALANCE_URL")
+LOG_FILE_PATH_SERVER = "/app/logs"
 LOG_FILE_PATH = "./logs"
 SALT = os.getenv("SALT")
 
