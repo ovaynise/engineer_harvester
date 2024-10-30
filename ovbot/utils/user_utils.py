@@ -1,6 +1,6 @@
-from config import LEVEL_RANGS, endpoint_reminder, endpoint_tg_users
+from config import (LEVEL_RANGS, endpoint_reminder, endpoint_tg_users,
+                    logger_bot, logger_db)
 from inits.api_client import api_ov_client
-from config import logger_db, logger_bot
 from utils.security import crypt
 
 

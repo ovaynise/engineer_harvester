@@ -3,10 +3,9 @@ from datetime import datetime
 from aiogram import Bot, F, Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from config import endpoint_reminder
+from config import endpoint_reminder, logger_bot
 from filters.chat_types import ChatTypesFilter, UserLevelFilter
 from inits.api_client import api_ov_client
-from config import logger_bot
 from keyboards.kb_reply import get_keyboard
 from utils.reminder_func import days_or_months, extract_time_intervals
 from utils.security import crypt

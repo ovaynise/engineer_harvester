@@ -1,6 +1,6 @@
 import asyncio
 
-from config import BOT_TOKEN, SUPER_USER_ID, TELEGRAM_GROUP_ID
+from config import BOT_TOKEN, SUPER_USER_ID, TELEGRAM_GROUP_ID, logger_bot
 from handlers.admin_handler import admin_router
 from handlers.anonymous_group_and_private import \
     anonymous_group_and_private_router
@@ -10,7 +10,6 @@ from handlers.group_commands import group_commands_router
 from handlers.reminder_handler import reminder_router
 from handlers.super_user_handler import super_user_router
 from handlers.user_private import user_private_router
-from config import logger_bot
 from modules.ovay_bot import OvayBot
 from utils.security import add_super_user_on_bd
 

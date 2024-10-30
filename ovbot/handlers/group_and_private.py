@@ -2,11 +2,10 @@ import asyncio
 from typing import Dict
 
 from aiogram import Router, types
-from config import TELEGRAM_GROUP_ID
+from config import TELEGRAM_GROUP_ID, logger_bot
 from filters.chat_types import (ChatTypesFilter, UserLevelFilter,
                                 UserLevelRangeFilter, security_filters)
 from inits.ai_client import ai_assistant
-from config import logger_bot
 from utils.security import crypt
 from utils.user_utils import (add_activity_chat_for_reminder,
                               del_activity_chat_for_reminder,

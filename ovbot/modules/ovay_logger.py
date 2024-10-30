@@ -1,7 +1,8 @@
 import logging
+import os
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-import os
+
 import pytz
 
 
@@ -16,30 +17,30 @@ class OvayLogger:
         self.setup_logging()
 
     def setup_logging(self):
-        # Создаем путь к основному файлу лога
-        log_file_path = os.path.join(self.log_file_base_path, f"{self.name}.log")
+        log_file_path = os.path.join(
+            self.log_file_base_path,
+            f"{self.name}.log")
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
 
         formatter = self.OvayFormatter(
-            "[%(asctime)s - func:_%(filename)s.%(funcName)s - %(levelname)s]:\n"
+            "[%(asctime)s - func:_%(filename)s.%(funcName)s "
+            "- %(levelname)s]:\n"
             ">> %(message)s <<\n----"
         )
         self.logger.setLevel(logging.DEBUG)
-
-        # Добавляем обработчик для основного файла
-        handler = RotatingFileHandler(log_file_path, maxBytes=50000000, backupCount=5)
+        handler = RotatingFileHandler(log_file_path,
+                                      maxBytes=50000000,
+                                      backupCount=5)
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-
-        # Если общий обработчик еще не создан, создаем его один раз
         if OvayLogger._general_handler is None:
-            general_log_path = os.path.join(self.log_file_base_path, self.general_log_file_name)
+            general_log_path = os.path.join(
+                self.log_file_base_path,
+                self.general_log_file_name)
             OvayLogger._general_handler = RotatingFileHandler(
                 general_log_path, maxBytes=50000000, backupCount=5
             )
             OvayLogger._general_handler.setFormatter(formatter)
-
-        # Добавляем общий обработчик к этому логгеру
         self.logger.addHandler(OvayLogger._general_handler)
 
     class OvayFormatter(logging.Formatter):

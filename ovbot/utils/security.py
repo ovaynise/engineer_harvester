@@ -1,10 +1,9 @@
 import hashlib
 import os
 
-from config import endpoint_tg_users
+from config import endpoint_tg_users, logger_db
 from dotenv import find_dotenv, load_dotenv
 from inits.api_client import api_ov_client
-from config import logger_db
 
 load_dotenv(find_dotenv())
 

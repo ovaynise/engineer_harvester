@@ -1,6 +1,6 @@
 import aiohttp
-from dotenv import load_dotenv
 from config import logger_db
+from dotenv import load_dotenv
 
 load_dotenv()
 

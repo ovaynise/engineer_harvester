@@ -1,6 +1,5 @@
 import requests
-from config import API_WEATHER_KEY, CITIES
-from config import logger_other
+from config import API_WEATHER_KEY, CITIES, logger_other
 
 
 class WeatherShow:
