@@ -282,3 +282,5 @@ xtred/logs/*
 help.txt
 logs/
 logs/*
+dialogs/
+ovbot/dialogs/

@@ -2,3 +2,7 @@
 venv
 .git
 db.sqlite3
+dialogs
+logs
+ovbot/logs
+xtred/logs
