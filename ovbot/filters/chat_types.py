@@ -1,11 +1,13 @@
 from functools import wraps
 from typing import Callable
-
+from aiogram.types import Message
 from aiogram import Router, types
 from aiogram.filters import Command, Filter
 from config import logger_bot
 from utils.security import crypt
 from utils.user_utils import get_user_level
+from aiogram import Bot
+
 
 
 def log_filter_result(
@@ -41,10 +43,12 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
         async def wrapper(message: types.Message):
             username = message.from_user.username or "неизвестен"
             user_firstname = message.from_user.first_name
-            chat_title = message.chat.title or (
-                f"личный " f"чат ({message.chat.id})"
-            )
+            chat_title = message.chat.title or f"личный чат ({message.chat.id})"
             user_id = message.from_user.id
+
+            # Отладка для типа чата и команды
+            print(f"Processing command: /{command or 'Сообщение'} in chat type: {message.chat.type}")
+
             for filter_ in filters:
                 if not await filter_(
                     message,
@@ -54,11 +58,12 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
                     user_firstname,
                     chat_title,
                 ):
-                    return
+                    return  # Фильтр не пройден, выход
 
-            logger_bot.debug(f"🟢Фильтры пройдены для пользователя {username}")
+            logger_bot.debug(f"🟢 Фильтры пройдены для пользователя {username}")
             return await handler(message)
 
+        # Регистрация команды или сообщений без команды
         if command:
             router.message.register(wrapper, Command(command))
         else:
@@ -74,23 +79,28 @@ class ChatTypesFilter(Filter):
         self.chat_types = chat_types
 
     async def __call__(
-        self,
-        message: types.Message,
-        command: str,
-        username: str,
-        user_id: int,
-        user_firstname: str,
-        chat_title: str,
+            self,
+            message: types.Message,
+            command: str = None,
+            username: str = "",
+            user_id: int = 0,
+            user_firstname: str = "",
+            chat_title: str = "",
     ) -> bool:
+        # Логирование для диагностики типа чата
+        logger_bot.info(
+            f"Проверка типа чата: {message.chat.type} для команды /{command or 'Сообщение'}")
+
+        # Проверка типа чата на соответствие разрешенным типам
         result = message.chat.type in self.chat_types
         if not result:
+            # Сообщение об ошибке и логирование
             await message.answer(
-                f"Команда /{command} доступна только в "
-                f"следующих типах чатов: "
-                f'{", ".join(self.chat_types)}.'
+                f"Команда /{command or 'неизвестная'} доступна только в "
+                f"следующих типах чатов: {', '.join(self.chat_types)}."
             )
         log_filter_result(
-            command,
+            command or "Сообщение",
             username,
             user_firstname,
             chat_title,
@@ -181,6 +191,45 @@ class UserLevelRangeFilter(Filter):
         self.max_level = max_level
 
     async def __call__(
+            self,
+            message: types.Message,
+            command: str,
+            username: str,
+            user_id: int,
+            user_firstname: str,
+            chat_title: str,
+    ) -> bool:
+        # Проверка для reply или упоминания бота
+        if not (message.reply_to_message or
+                any(entity.type == "mention" and entity.extract_text(
+                    message.text) == f'@{message.bot.username}' for entity in
+                    message.entities)):
+            return False
+
+        user_level = await get_user_level(crypt(user_id))
+        result = (
+                user_level is not None
+                and self.min_level <= user_level <= self.max_level
+        )
+
+        if not result:
+            await message.answer(
+                f"Для общения с ботом необходимо быть "
+                f"с уровнем доступа от {self.min_level} "
+                f"до {self.max_level}. "
+                f" Ваш уровень: {user_level}. "
+                f"Для получения 15 уровня зарегистрируйтесь "
+                f"командой /start"
+            )
+        return result
+
+
+class UserPrivateLevelRangeFilter(Filter):
+    def __init__(self, min_level: int, max_level: int) -> None:
+        self.min_level = min_level
+        self.max_level = max_level
+
+    async def __call__(
         self,
         message: types.Message,
         command: str,
@@ -189,11 +238,6 @@ class UserLevelRangeFilter(Filter):
         user_firstname: str,
         chat_title: str,
     ) -> bool:
-        if not (
-            message.reply_to_message
-            and message.reply_to_message.from_user.id == message.bot.id
-        ):
-            return False
         user_level = await get_user_level(crypt(user_id))
         result = (
             user_level is not None
@@ -204,8 +248,28 @@ class UserLevelRangeFilter(Filter):
                 f"Для общения с ботом необходимо быть "
                 f"с уровнем доступа от {self.min_level} "
                 f"до {self.max_level}. "
-                f" Ваш уровень: {user_level}. "
-                f"Для получения 15 уровня  зарегистрируйтесь "
+                f"Ваш уровень: {user_level}. "
+                f"Для получения 15 уровня зарегистрируйтесь "
                 f"командой /start"
             )
         return result
+
+class GroupChatInteractionFilter(Filter):
+    def __init__(self, bot: Bot):
+        self.bot = bot
+
+    async def __call__(self, message: Message, *args, **kwargs) -> bool:
+        bot_username = (await self.bot.get_me()).username
+
+        # Проверка на реплай на сообщение бота
+        is_reply_to_bot = message.reply_to_message and message.reply_to_message.from_user.id == self.bot.id
+
+        # Проверка на упоминание бота в тексте
+        mentions_bot = message.entities and any(
+            entity.type == "mention" and
+            message.text[entity.offset:entity.offset + entity.length] == f"@{bot_username}"
+            for entity in message.entities
+        )
+
+        # Возвращаем True только если сообщение направлено боту (реплай или упоминание)
+        return is_reply_to_bot or mentions_bot

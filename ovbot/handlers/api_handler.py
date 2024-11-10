@@ -10,12 +10,14 @@ common_filters = [
     UserLevelFilter(0, 15, "IsAuthUser"),
 ]
 
+def setup_api_router_handlers(ovay_bot):
+    @security_filters(api_router, "temp", *common_filters)
+    async def show_weather_minsk(message: types.Message):
+        await message.answer(f"Погода в минске: {weather_minsk.info()},")
 
-@security_filters(api_router, "temp", *common_filters)
-async def show_weather_minsk(message: types.Message):
-    await message.answer(f"Погода в минске: {weather_minsk.info()},")
 
+    @security_filters(api_router, "btc", *common_filters)
+    async def show_btc(message: types.Message):
+        await message.answer(f"Cтоимость биткоина: {crypto_shower.show_btc()},")
 
-@security_filters(api_router, "btc", *common_filters)
-async def show_btc(message: types.Message):
-    await message.answer(f"Cтоимость биткоина: {crypto_shower.show_btc()},")
+    return api_router

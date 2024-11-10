@@ -41,6 +41,7 @@ services:
     volumes:
       - media:${MEDIA_ROOT_LOCAL}
       - ${LOG_FILE_PATH_LOCAL}:/app/logs
+      - ${DIALOGS_DIR_LOCAL}:/app/dialogs
     depends_on:
       - ovaynisedb
 
