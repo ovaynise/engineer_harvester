@@ -17,7 +17,7 @@
 
 ## **Использованные технологии**
 - **Backend:** Python, Django REST Framework, PostgreSQL
-- **Фронт:** [можно добавить, если есть фронтенд технологии]
+- **Фронт:** Django, Bootstrap, HTML
 - **Асинхронная работа с ботом:** Aiogram
 - **Веб-сервер:** Gunicorn, Nginx
 - **Аутентификация и авторизация:** DJOSER
