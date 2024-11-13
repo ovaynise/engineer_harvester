@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from config import logger_bot
+
 import requests
 
 
@@ -18,18 +20,16 @@ class TokenManager:
             token_data = response.json()
             self.iam_token = token_data.get("iamToken")
             expires_at = token_data.get("expiresAt")
-
-            # Обрезаем до секунд, игнорируя дополнительные символы после
             cleaned_expires_at = expires_at.split(".")[0]
             self.token_expiry = datetime.fromisoformat(
                 cleaned_expires_at
             ) - timedelta(minutes=5)
-            print(f"Новый IAM-токен получен и истекает: {expires_at}")
+            logger_bot.info(f"Новый IAM-токен получен и "
+                            f"истекает: {expires_at}")
         except requests.exceptions.RequestException as e:
-            print("Ошибка при получении IAM-токена:", e)
+            logger_bot.error("Ошибка при получении IAM-токена:", e)
 
     def get_token(self):
-        # Проверка, нужно ли обновить токен
         if not self.iam_token or datetime.now() >= self.token_expiry:
             self.refresh_token()
         return self.iam_token

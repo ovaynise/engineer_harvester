@@ -85,3 +85,4 @@ services:
       - static:/backend_static
       - media:${MEDIA_ROOT}
       - ${LOG_FILE_PATH}:/app/logs
+

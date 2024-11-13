@@ -19,7 +19,7 @@ YANDEX_OAUTH_TOKEN = os.getenv("YANDEX_OAUTH_TOKEN")
 YCLOUD_CATALOG_ID = os.getenv("YCLOUD_CATALOG_ID")
 API_KEY = os.getenv("API_KEY")
 IAM_TOKEN = os.getenv("IAM_TOKEN")
-
+banwords_file_path = 'utils/banwords.json'
 
 WHO_IS_BOT = 'Достаточно умный искуственный интелект по имени Ovay'
 
@@ -78,4 +78,3 @@ crypto_headers = {
 CITIES = {
     "Минск": [53.842316, 27.695950],
 }
-

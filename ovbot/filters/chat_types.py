@@ -1,13 +1,11 @@
 from functools import wraps
 from typing import Callable
-from aiogram.types import Message
+
 from aiogram import Router, types
 from aiogram.filters import Command, Filter
 from config import logger_bot
 from utils.security import crypt
 from utils.user_utils import get_user_level
-from aiogram import Bot
-
 
 
 def log_filter_result(
@@ -43,11 +41,13 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
         async def wrapper(message: types.Message):
             username = message.from_user.username or "неизвестен"
             user_firstname = message.from_user.first_name
-            chat_title = message.chat.title or f"личный чат ({message.chat.id})"
+            chat_title = message.chat.title or (f"личный чат"
+                                                f" ({message.chat.id})")
             user_id = message.from_user.id
 
             # Отладка для типа чата и команды
-            print(f"Processing command: /{command or 'Сообщение'} in chat type: {message.chat.type}")
+            print(f"Processing command: /{command or 'Сообщение'}"
+                  f" in chat type: {message.chat.type}")
 
             for filter_ in filters:
                 if not await filter_(
@@ -87,14 +87,11 @@ class ChatTypesFilter(Filter):
             user_firstname: str = "",
             chat_title: str = "",
     ) -> bool:
-        # Логирование для диагностики типа чата
         logger_bot.info(
-            f"Проверка типа чата: {message.chat.type} для команды /{command or 'Сообщение'}")
-
-        # Проверка типа чата на соответствие разрешенным типам
+            f"Проверка типа чата: {message.chat.type} для команды "
+            f"/{command or 'Сообщение'}")
         result = message.chat.type in self.chat_types
         if not result:
-            # Сообщение об ошибке и логирование
             await message.answer(
                 f"Команда /{command or 'неизвестная'} доступна только в "
                 f"следующих типах чатов: {', '.join(self.chat_types)}."
@@ -199,7 +196,6 @@ class UserLevelRangeFilter(Filter):
             user_firstname: str,
             chat_title: str,
     ) -> bool:
-        # Проверка для reply или упоминания бота
         if not (message.reply_to_message or
                 any(entity.type == "mention" and entity.extract_text(
                     message.text) == f'@{message.bot.username}' for entity in
@@ -253,23 +249,3 @@ class UserPrivateLevelRangeFilter(Filter):
                 f"командой /start"
             )
         return result
-
-class GroupChatInteractionFilter(Filter):
-    def __init__(self, bot: Bot):
-        self.bot = bot
-
-    async def __call__(self, message: Message, *args, **kwargs) -> bool:
-        bot_username = (await self.bot.get_me()).username
-
-        # Проверка на реплай на сообщение бота
-        is_reply_to_bot = message.reply_to_message and message.reply_to_message.from_user.id == self.bot.id
-
-        # Проверка на упоминание бота в тексте
-        mentions_bot = message.entities and any(
-            entity.type == "mention" and
-            message.text[entity.offset:entity.offset + entity.length] == f"@{bot_username}"
-            for entity in message.entities
-        )
-
-        # Возвращаем True только если сообщение направлено боту (реплай или упоминание)
-        return is_reply_to_bot or mentions_bot
