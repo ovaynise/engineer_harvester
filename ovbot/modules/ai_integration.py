@@ -1,11 +1,10 @@
-import os
 import json
-from datetime import datetime
-from modules.token_manager import TokenManager
-from config import YANDEX_OAUTH_TOKEN, YCLOUD_CATALOG_ID
-from config import WHO_IS_BOT, DIALOGS_DIR
-import requests
+import os
 
+import requests
+from config import (DIALOGS_DIR, WHO_IS_BOT, YANDEX_OAUTH_TOKEN,
+                    YCLOUD_CATALOG_ID)
+from modules.token_manager import TokenManager
 
 os.makedirs(DIALOGS_DIR, exist_ok=True)
 
@@ -41,7 +40,8 @@ def gpt(data):
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code != 200:
-        raise RuntimeError(f'Ошибка: код {response.status_code}, сообщение: {response.text}')
+        raise RuntimeError(f'Ошибка: код {response.status_code},'
+                           f' сообщение: {response.text}')
 
     response_json = response.json()
     try:

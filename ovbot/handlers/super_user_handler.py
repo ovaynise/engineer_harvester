@@ -8,12 +8,12 @@ from config import LOG_FILE_PATH_SERVER, logger_bot
 from filters.chat_types import (ChatTypesFilter, UserLevelFilter,
                                 security_filters)
 
-
 super_user_router = Router()
 common_filters = [
     ChatTypesFilter(["group", "supergroup", "channel", "private"]),
     UserLevelFilter(0, 0, "IsSuperUser"),
 ]
+
 
 def setup_super_user_handlers(ovay_bot):
     @security_filters(super_user_router, "logs", *common_filters)
@@ -48,7 +48,8 @@ def setup_super_user_handlers(ovay_bot):
                         if file_size > 0:
                             zip_file.write(file_path, arcname=filename)
 
-                            logger_bot.info(f"Файл {filename} добавлен в архив.")
+                            logger_bot.info(f"Файл {filename} добавлен в"
+                                            f" архив.")
                         else:
                             logger_bot.info(f"Файл {filename} пуст и не будет "
                                             f"добавлен в архив.")
@@ -71,13 +72,13 @@ def setup_super_user_handlers(ovay_bot):
             )
             logger_bot.info(f"Архив {zip_filename} успешно отправлен.")
         except Exception as e:
-            logger_bot.info(f"Ошибка при отправке архива {zip_filename}: {str(e)}")
+            logger_bot.info(f"Ошибка при отправке архива {zip_filename}: "
+                            f"{str(e)}")
             await message.answer(
                 f"Не удалось отправить архив логов {zip_filename}: {str(e)}"
             )
         finally:
             os.remove(zip_file_path)
-
 
     @security_filters(super_user_router, "su", *common_filters)
     async def su_test(message: types.Message):

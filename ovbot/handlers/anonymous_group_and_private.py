@@ -12,8 +12,10 @@ common_filters = [
     UserLevelFilter(0, 100, "IsAnonymousUser"),
 ]
 
+
 def setup_anonymous_group_and_private_router_handlers(ovay_bot):
-    @security_filters(anonymous_group_and_private_router, "start", *common_filters)
+    @security_filters(anonymous_group_and_private_router, "start",
+                      *common_filters)
     async def start(message: types.Message):
         try:
             user_response = await api_ov_client.get(
@@ -55,14 +57,14 @@ def setup_anonymous_group_and_private_router_handlers(ovay_bot):
             )
 
         except ValueError:
-            await message.answer("Произошла ошибка при обработке ID пользователя.")
+            await message.answer("Произошла ошибка при обработке ID "
+                                 "пользователя.")
         except KeyError:
             await message.answer(
                 "Произошла ошибка при доступе к данным " "пользователя."
             )
         except Exception as e:
             await message.answer(f"Произошла ошибка: {e}")
-
 
     @security_filters(
         anonymous_group_and_private_router, "status", *common_filters
@@ -84,7 +86,8 @@ def setup_anonymous_group_and_private_router_handlers(ovay_bot):
 
             await message.answer(f"Ваш уровень: {level_rang}")
         except ValueError:
-            await message.answer("Произошла ошибка при обработке ID пользователя.")
+            await message.answer("Произошла ошибка при обработке ID"
+                                 " пользователя.")
         except KeyError:
             await message.answer(
                 "Произошла ошибка при доступе к данным пользователя."
