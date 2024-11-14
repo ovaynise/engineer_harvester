@@ -49,8 +49,8 @@ class OvayBot:
         try:
             if user_message is not None and user_id is not None:
                 log_text = (
-                    f"🟧▶️User: @{username} (ID: {user_id}, Chat: '{chat_title}', Chat ID: {chat_id}) "
-                    f"sent message: {user_message} ◀️🟧"
+                    f"🟧User: @{username} (ID: {user_id}, Chat: '{chat_title}', Chat ID: {chat_id}) "
+                    f"\nsent message:▶️ {user_message} ◀️🟧"
                 )
                 logger_other.info(log_text)
                 await self.bot.send_message(TELEGRAM_GROUP_ID, log_text)
