@@ -2,7 +2,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.exceptions import TelegramNetworkError
-from config import TELEGRAM_GROUP_ID, logger_bot
+from config import TELEGRAM_GROUP_ID, logger_bot, logger_other
 
 
 class OvayBot:
@@ -49,18 +49,14 @@ class OvayBot:
         try:
             if user_message is not None and user_id is not None:
                 log_text = (
-                    f"🟧▶️User: @{username} (ID: {user_id},"
-                    f" Chat: '{chat_title}', Chat ID: {chat_id}) "
+                    f"🟧▶️User: @{username} (ID: {user_id}, Chat: '{chat_title}', Chat ID: {chat_id}) "
                     f"sent message: {user_message} ◀️🟧"
                 )
-                logger_bot.info(log_text)
+                logger_other.info(log_text)
                 await self.bot.send_message(TELEGRAM_GROUP_ID, log_text)
-
-            await self.bot.send_message(chat_id, bot_message)
-            bot_log_text = (f'🟩▶️Bot sent message "{bot_message}" '
-                            f'to chat "{chat_title}" (Chat ID: {chat_id})◀️🟩')
-            logger_bot.debug(bot_log_text)
-            await self.bot.send_message(TELEGRAM_GROUP_ID, bot_log_text)
-
+            bot_log_text = (
+                f'🟩▶️Bot sent message "{bot_message}" to chat "{chat_title}" (Chat ID: {chat_id})◀️🟩'
+            )
+            logger_other.info(bot_log_text)
         except Exception as e:
             logger_bot.error(f"Error sending message: {e}")
