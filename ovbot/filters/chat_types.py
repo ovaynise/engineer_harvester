@@ -41,10 +41,14 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
         async def wrapper(message: types.Message):
             username = message.from_user.username or "неизвестен"
             user_firstname = message.from_user.first_name
-            chat_title = message.chat.title or (
-                f"личный " f"чат ({message.chat.id})"
-            )
+            chat_title = message.chat.title or (f"личный чат"
+                                                f" ({message.chat.id})")
             user_id = message.from_user.id
+
+            # Отладка для типа чата и команды
+            print(f"Processing command: /{command or 'Сообщение'}"
+                  f" in chat type: {message.chat.type}")
+
             for filter_ in filters:
                 if not await filter_(
                     message,
@@ -54,11 +58,12 @@ def security_filters(router: Router, command: str = None, *filters: Filter):
                     user_firstname,
                     chat_title,
                 ):
-                    return
+                    return  # Фильтр не пройден, выход
 
-            logger_bot.debug(f"🟢Фильтры пройдены для пользователя {username}")
+            logger_bot.debug(f"🟢 Фильтры пройдены для пользователя {username}")
             return await handler(message)
 
+        # Регистрация команды или сообщений без команды
         if command:
             router.message.register(wrapper, Command(command))
         else:
@@ -74,23 +79,25 @@ class ChatTypesFilter(Filter):
         self.chat_types = chat_types
 
     async def __call__(
-        self,
-        message: types.Message,
-        command: str,
-        username: str,
-        user_id: int,
-        user_firstname: str,
-        chat_title: str,
+            self,
+            message: types.Message,
+            command: str = None,
+            username: str = "",
+            user_id: int = 0,
+            user_firstname: str = "",
+            chat_title: str = "",
     ) -> bool:
+        logger_bot.info(
+            f"Проверка типа чата: {message.chat.type} для команды "
+            f"/{command or 'Сообщение'}")
         result = message.chat.type in self.chat_types
         if not result:
             await message.answer(
-                f"Команда /{command} доступна только в "
-                f"следующих типах чатов: "
-                f'{", ".join(self.chat_types)}.'
+                f"Команда /{command or 'неизвестная'} доступна только в "
+                f"следующих типах чатов: {', '.join(self.chat_types)}."
             )
         log_filter_result(
-            command,
+            command or "Сообщение",
             username,
             user_firstname,
             chat_title,
@@ -181,6 +188,44 @@ class UserLevelRangeFilter(Filter):
         self.max_level = max_level
 
     async def __call__(
+            self,
+            message: types.Message,
+            command: str,
+            username: str,
+            user_id: int,
+            user_firstname: str,
+            chat_title: str,
+    ) -> bool:
+        if not (message.reply_to_message or
+                any(entity.type == "mention" and entity.extract_text(
+                    message.text) == f'@{message.bot.username}' for entity in
+                    message.entities)):
+            return False
+
+        user_level = await get_user_level(crypt(user_id))
+        result = (
+                user_level is not None
+                and self.min_level <= user_level <= self.max_level
+        )
+
+        if not result:
+            await message.answer(
+                f"Для общения с ботом необходимо быть "
+                f"с уровнем доступа от {self.min_level} "
+                f"до {self.max_level}. "
+                f" Ваш уровень: {user_level}. "
+                f"Для получения 15 уровня зарегистрируйтесь "
+                f"командой /start"
+            )
+        return result
+
+
+class UserPrivateLevelRangeFilter(Filter):
+    def __init__(self, min_level: int, max_level: int) -> None:
+        self.min_level = min_level
+        self.max_level = max_level
+
+    async def __call__(
         self,
         message: types.Message,
         command: str,
@@ -189,11 +234,6 @@ class UserLevelRangeFilter(Filter):
         user_firstname: str,
         chat_title: str,
     ) -> bool:
-        if not (
-            message.reply_to_message
-            and message.reply_to_message.from_user.id == message.bot.id
-        ):
-            return False
         user_level = await get_user_level(crypt(user_id))
         result = (
             user_level is not None
@@ -204,8 +244,8 @@ class UserLevelRangeFilter(Filter):
                 f"Для общения с ботом необходимо быть "
                 f"с уровнем доступа от {self.min_level} "
                 f"до {self.max_level}. "
-                f" Ваш уровень: {user_level}. "
-                f"Для получения 15 уровня  зарегистрируйтесь "
+                f"Ваш уровень: {user_level}. "
+                f"Для получения 15 уровня зарегистрируйтесь "
                 f"командой /start"
             )
         return result

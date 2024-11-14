@@ -282,5 +282,10 @@ xtred/logs/*
 help.txt
 logs/
 logs/*
+<<<<<<< HEAD
 dialogs
 ovbot/dialogs
+=======
+dialogs/
+ovbot/dialogs/
+>>>>>>> 2b83551558b15acc8c5c072d69b3044850865e5c

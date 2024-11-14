@@ -30,6 +30,7 @@ services:
       - static:/backend_static
       - media:${MEDIA_ROOT}
       - ${LOG_FILE_PATH}:/app/logs
+      - ${DIALOGS_DIR}:/app/dialogs
 
   ovbot:
     image: ${DOCKER_USERNAME}/engineer_ovbot
@@ -84,3 +85,4 @@ services:
       - static:/backend_static
       - media:${MEDIA_ROOT}
       - ${LOG_FILE_PATH}:/app/logs
+

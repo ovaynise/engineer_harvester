@@ -14,11 +14,21 @@ crypto_url = os.getenv("CRYPTO_URL")
 URL_SERVER_API = os.getenv("URL_SERVER_API")
 API_WEATHER_KEY = os.getenv("WEATHER_API_key")
 SUPER_USER_ID = os.getenv("SUPER_USER_ID")
-AI_API_KEY = os.getenv("AI_API_KEY")
-AI_URL_API = os.getenv("AI_URL_API")
-AI_BALANCE_URL = os.getenv("AI_BALANCE_URL")
+
+YANDEX_OAUTH_TOKEN = os.getenv("YANDEX_OAUTH_TOKEN")
+YCLOUD_CATALOG_ID = os.getenv("YCLOUD_CATALOG_ID")
+API_KEY = os.getenv("API_KEY")
+IAM_TOKEN = os.getenv("IAM_TOKEN")
+banwords_file_path = 'utils/banwords.json'
+
+WHO_IS_BOT = ('Умный но ворчливый ассистент по имени Джарвис'
+              'отвечает постоянно с сарказмом ')
+
+
 LOG_FILE_PATH_SERVER = "/app/logs"
 LOG_FILE_PATH = "./logs"
+DIALOGS_DIR_SERVER = "/app/dialogs"
+DIALOGS_DIR = "./dialogs"
 SALT = os.getenv("SALT")
 
 logger_bot = OvayLogger(
@@ -69,13 +79,3 @@ crypto_headers = {
 CITIES = {
     "Минск": [53.842316, 27.695950],
 }
-
-
-AI_MODEL = "gpt-4o-mini"
-AI_ROLE = "user"
-AI_SYSTEM_ROLE = {
-    "role": "system",
-    "content": "Отвечаешь преимущественно на русском языке.",
-}
-AI_MAX_TOKENS = 1000
-AI_HEADERS = {"Authorization": f"Bearer {AI_API_KEY}"}
