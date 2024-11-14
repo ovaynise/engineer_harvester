@@ -30,6 +30,7 @@ LOG_FILE_PATH = "./logs"
 DIALOGS_DIR_SERVER = "/app/dialogs"
 DIALOGS_DIR = "./dialogs"
 SALT = os.getenv("SALT")
+ENCRYPT_SALT = os.getenv("ENCRYPT_SALT")
 
 logger_bot = OvayLogger(
     name="logger_bot",

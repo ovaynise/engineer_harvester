@@ -9,20 +9,21 @@ from handlers.api_handler import setup_api_router_handlers
 from handlers.group_and_private import setup_group_and_private_handlers
 from handlers.super_user_handler import setup_super_user_handlers
 from middlewares.default_middlewar import (AccessControlMiddleware,
-                                           ForbiddenWordsMiddleware)
+                                           ForbiddenWordsMiddleware,
+                                           AntiFloodMiddleware)
 from modules.ovay_bot import OvayBot
 from utils.security import add_super_user_on_bd
 
 
 def create_dispatcher(ovay_bot: OvayBot) -> Dispatcher:
     dp = Dispatcher()
-    dp.update.middleware(ForbiddenWordsMiddleware(
-        banwords_file_path=banwords_file_path))
+    dp.update.middleware(AntiFloodMiddleware(bot=ovay_bot.bot, rate_limit=2))
+    dp.update.middleware(ForbiddenWordsMiddleware(bot=ovay_bot.bot, banwords_file_path=banwords_file_path))
     dp.update.middleware(AccessControlMiddleware())
     dp.include_router(setup_api_router_handlers(ovay_bot))
     dp.include_router(setup_super_user_handlers(ovay_bot))
     dp.include_router(setup_anonymous_group_and_private_router_handlers(ovay_bot))
-    dp.include_router(setup_group_and_private_handlers(ovay_bot))  # Экземпляр Router
+    dp.include_router(setup_group_and_private_handlers(ovay_bot))
     return dp
 
 
@@ -31,7 +32,7 @@ async def main() -> None:
     ovay_bot = OvayBot(bot, Dispatcher(), timeout=5, retry_attempts=3)
     ovay_bot.dp = create_dispatcher(ovay_bot)
     await add_super_user_on_bd(SUPER_USER_ID)
-    await ovay_bot.info_message(TELEGRAM_GROUP_ID,
+    await bot.send_message(TELEGRAM_GROUP_ID,
                                 "Бот начал работу!!!")
     bot_task = asyncio.create_task(ovay_bot.start())
     await asyncio.gather(bot_task)

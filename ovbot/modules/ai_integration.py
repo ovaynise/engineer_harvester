@@ -1,34 +1,51 @@
 import json
 import os
-
+from cryptography.fernet import Fernet
 import requests
 from config import (DIALOGS_DIR, WHO_IS_BOT, YANDEX_OAUTH_TOKEN,
-                    YCLOUD_CATALOG_ID)
+                    YCLOUD_CATALOG_ID, ENCRYPT_SALT)
 from modules.token_manager import TokenManager
 
+# Убедитесь, что DIALOGS_DIR существует
 os.makedirs(DIALOGS_DIR, exist_ok=True)
-
 
 token_manager = TokenManager(YANDEX_OAUTH_TOKEN)
 
+# Создаем объект Fernet для шифрования и расшифровки
+fernet = Fernet(ENCRYPT_SALT)
 
-def get_dialog_filename(username, user_id, chat_id):
-    """Формирует имя файла для хранения диалога по пользователю и чату."""
-    return os.path.join(DIALOGS_DIR, f"{username}_{user_id}_{chat_id}.json")
+
+def encrypt_data(data):
+    """Шифрует данные перед сохранением."""
+    return fernet.encrypt(data.encode())
+
+
+def decrypt_data(data):
+    """Расшифровывает данные перед загрузкой."""
+    return fernet.decrypt(data).decode()
+
+
+def get_dialog_filename(user_id):
+    """Формирует имя файла для хранения диалога по пользователю."""
+    return os.path.join(DIALOGS_DIR, f"{user_id}.json")
 
 
 def load_dialog_history(filename):
-    """Загружает историю диалога из файла."""
+    """Загружает и расшифровывает историю диалога из файла."""
     if os.path.exists(filename):
-        with open(filename, "r", encoding="utf-8") as file:
-            return json.load(file)
+        with open(filename, "rb") as file:  # Открываем файл в бинарном режиме
+            encrypted_data = file.read()
+            decrypted_data = decrypt_data(encrypted_data)
+            return json.loads(decrypted_data)
     return []
 
 
 def save_dialog_history(filename, dialog_history):
-    """Сохраняет историю диалога в файл."""
-    with open(filename, "w", encoding="utf-8") as file:
-        json.dump(dialog_history, file, ensure_ascii=False, indent=2)
+    """Шифрует и сохраняет историю диалога в файл."""
+    encrypted_data = encrypt_data(
+        json.dumps(dialog_history, ensure_ascii=False, indent=2))
+    with open(filename, "wb") as file:
+        file.write(encrypted_data)
 
 
 def gpt(data):
@@ -40,8 +57,8 @@ def gpt(data):
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code != 200:
-        raise RuntimeError(f'Ошибка: код {response.status_code},'
-                           f' сообщение: {response.text}')
+        raise RuntimeError(
+            f'Ошибка: код {response.status_code}, сообщение: {response.text}')
 
     response_json = response.json()
     try:
@@ -50,14 +67,14 @@ def gpt(data):
         return "Ответ не найден"
 
 
-def process_ai_response(user_id, chat_id, username, user_message):
-    filename = get_dialog_filename(username, user_id, chat_id)
+def process_ai_response(user_id, chat_id=None, username=None,
+                        user_message=None):
+    filename = get_dialog_filename(user_id)
     dialog_history = load_dialog_history(filename)
+
     if not any(msg["role"] == "system" for msg in dialog_history):
-        dialog_history.insert(0, {
-            "role": "system",
-            "text": WHO_IS_BOT
-        })
+        dialog_history.insert(0, {"role": "system", "text": WHO_IS_BOT})
+
     dialog_history.append({"role": "user", "text": user_message})
 
     data = {
@@ -69,7 +86,9 @@ def process_ai_response(user_id, chat_id, username, user_message):
         },
         "messages": dialog_history
     }
+
     assistant_response = gpt(data)
+
     dialog_history.append({"role": "assistant", "text": assistant_response})
     save_dialog_history(filename, dialog_history)
 
