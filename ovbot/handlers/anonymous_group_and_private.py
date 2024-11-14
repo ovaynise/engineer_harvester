@@ -83,8 +83,17 @@ def setup_anonymous_group_and_private_router_handlers(ovay_bot):
             user_data = user_response["results"][0]
             user_level = user_data["level"]
             level_rang = get_level_rang(user_level)
+            response_message = f"Ваш уровень: {level_rang}"
 
-            await message.answer(f"Ваш уровень: {level_rang}")
+            await message.answer(response_message)
+            await ovay_bot.info_message(
+                chat_id=message.chat.id,
+                bot_message=response_message,
+                user_message=message.text,
+                user_id=message.from_user.id,
+                username=message.from_user.username or "Без имени",
+                chat_title=message.chat.title if message.chat.title else message.from_user.username
+            )
         except ValueError:
             await message.answer("Произошла ошибка при обработке ID"
                                  " пользователя.")

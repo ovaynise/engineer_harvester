@@ -21,10 +21,8 @@ def create_dispatcher(ovay_bot: OvayBot) -> Dispatcher:
     dp.update.middleware(AccessControlMiddleware())
     dp.include_router(setup_api_router_handlers(ovay_bot))
     dp.include_router(setup_super_user_handlers(ovay_bot))
-    dp.include_router(setup_anonymous_group_and_private_router_handlers(
-        ovay_bot))
-    dp.include_router(setup_group_and_private_handlers(ovay_bot))
-
+    dp.include_router(setup_anonymous_group_and_private_router_handlers(ovay_bot))
+    dp.include_router(setup_group_and_private_handlers(ovay_bot))  # Экземпляр Router
     return dp
 
 
