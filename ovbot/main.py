@@ -17,10 +17,6 @@ from utils.security import add_super_user_on_bd
 
 def create_dispatcher(ovay_bot: OvayBot) -> Dispatcher:
     dp = Dispatcher()
-    dp.update.middleware(AntiFloodMiddleware(bot=ovay_bot.bot, rate_limit=2))
-    dp.update.middleware(ForbiddenWordsMiddleware(
-        bot=ovay_bot.bot,
-        banwords_file_path=banwords_file_path))
     dp.update.middleware(AccessControlMiddleware())
     dp.include_router(setup_api_router_handlers(ovay_bot))
     dp.include_router(setup_super_user_handlers(ovay_bot))
