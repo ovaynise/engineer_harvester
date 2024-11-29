@@ -12,7 +12,7 @@ class Entity(BaseModel):
     )
 
     class Meta:
-        verbose_name = "Юридическое лицо"
+        verbose_name = "Юридическое лицо!"
 
     def __str__(self):
         return self.title
