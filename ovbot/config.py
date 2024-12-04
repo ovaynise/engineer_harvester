@@ -3,6 +3,7 @@ import os
 from dotenv import find_dotenv, load_dotenv
 from modules.ovay_logger import OvayLogger
 
+
 load_dotenv(find_dotenv())
 
 TELEGRAM_GROUP_ID = int(os.getenv("TELEGRAM_GROUP_ID"))

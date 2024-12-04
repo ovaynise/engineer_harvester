@@ -1,91 +1,90 @@
+import logging
 import time
-from middlewares.blocked_users import blocked_users
-from datetime import datetime
-from aiogram import BaseMiddleware, Bot
-from aiogram.types import Message, Update, ChatPermissions
 from collections import defaultdict
-from config import TELEGRAM_GROUP_ID, logger_other
+from aiogram import BaseMiddleware, Bot
+from middlewares.user_block_manager import is_user_blocked, block_user, add_user_warning, get_user_warnings
+from aiogram.types import Message, Update, ChatPermissions
 
+logger = logging.getLogger(__name__)
+logger_other = logging.getLogger("logger_other")
 
-INITIAL_BLOCK_DURATION = 1
-SECOND_BLOCK_DURATION = 5
-SUBSEQUENT_BLOCK_DURATION = 30
+# Константы антифлуда
+MAX_MESSAGES = 2  # Максимальное количество сообщений
+TIME_WINDOW = 2  # Время в секундах для проверки частоты сообщений
+BAN_DURATION_GROUP = 300  # Блокировка в группах в секундах (5 минут)
+
+# Кэш для хранения времени сообщений
+user_message_times = defaultdict(list)
 
 
 class AntiFloodMiddleware(BaseMiddleware):
-    def __init__(self, bot: Bot, rate_limit: int = 2, warning_limit: int = 2):
+    def __init__(self, bot: Bot):
         super().__init__()
         self.bot = bot
-        self.rate_limit = rate_limit
-        self.warning_limit = warning_limit
 
     async def __call__(self, handler, event: Update, data: dict):
-        if isinstance(event, Update) and event.message and isinstance(event.message, Message):
-            message = event.message
-            user_id = message.from_user.id
-            chat_id = message.chat.id
-            current_time = time.time()
+        if not isinstance(event, Update) or not event.message or not isinstance(event.message, Message):
+            return await handler(event, data)
 
-            # Проверка на блокировку пользователя (если уже заблокирован, игнорируем его)
-            if chat_id in blocked_users and user_id in blocked_users[chat_id]:
-                block_end_time = blocked_users[chat_id][user_id]["blocked_until"]
-                if block_end_time > current_time:
-                    if message.chat.type == "private" and not blocked_users[chat_id][user_id].get("block_notified", False):
-                        readable_block_end = datetime.fromtimestamp(block_end_time).strftime('%Y-%m-%d %H:%M:%S')
-                        await message.reply(f"Вы заблокированы до {readable_block_end}.")
-                        blocked_users[chat_id][user_id]["block_notified"] = True
-                    return  # Игнорируем сообщения, пока не пройдет блокировка
+        message = event.message
+        user_id = message.from_user.id
+        chat_id = message.chat.id
+        current_time = time.time()
 
-            # Логика антифлуд фильтра
-            last_activity = blocked_users[chat_id].get(user_id, {"time": 0, "warnings": 0})
-            if current_time - last_activity["time"] < self.rate_limit:
-                last_activity["warnings"] += 1
-                if last_activity["warnings"] >= self.warning_limit:
-                    block_duration = INITIAL_BLOCK_DURATION * 60
-                    block_end_time = current_time + block_duration
-                    readable_block_end = datetime.fromtimestamp(block_end_time).strftime('%Y-%m-%d %H:%M:%S')
+        # Пропускаем обработку для личных сообщений
+        if message.chat.type == "private":
+            return await handler(event, data)
 
-                    try:
-                        await self.bot.restrict_chat_member(
-                            chat_id, user_id,
-                            permissions=ChatPermissions(can_send_messages=False),
-                            until_date=block_end_time
-                        )
-                    except Exception as e:
-                        logger_other.error(f"Не удалось заблокировать пользователя {user_id} в чате {chat_id}: {e}")
+        logger_other.info(f"Антифлуд: Проверяем сообщение от пользователя {user_id} в группе {chat_id}.")
+        logger_other.debug(f"Текст сообщения: {message.text}")
 
-                    # Обновляем блокировку в чате
-                    if chat_id not in blocked_users:
-                        blocked_users[chat_id] = {}
+        # Удаляем старые записи из кэша
+        old_count = len(user_message_times[user_id])
+        user_message_times[user_id] = [
+            t for t in user_message_times[user_id] if current_time - t < TIME_WINDOW
+        ]
+        logger_other.debug(f"Удалено {old_count - len(user_message_times[user_id])} старых записей из кэша для пользователя {user_id}.")
 
-                    blocked_users[chat_id][user_id] = {
-                        "blocked_until": block_end_time,
-                        "reason": "spam",
-                        "block_notified": False
-                    }
+        # Добавляем текущее время в кэше
+        user_message_times[user_id].append(current_time)
+        logger_other.debug(f"Обновлён кэш для пользователя {user_id}: {user_message_times[user_id]}.")
 
-                    # Отправляем сообщение в группу
-                    await self.bot.send_message(
-                        TELEGRAM_GROUP_ID,
-                        f"Пользователь @{message.from_user.username} заблокирован за спам.\n"
-                        f"Чат: {message.chat.title if message.chat.title else 'Без названия'}\n"
-                        f"Причина: Спам сообщений.\n"
-                        f"Заблокирован до: {readable_block_end}"
+        # Проверяем наличие блокировки
+        if is_user_blocked(chat_id, user_id):
+            logger_other.info(f"Антифлуд: Пользователь {user_id} уже заблокирован.")
+            return  # Игнорируем сообщения
+
+        # Проверяем лимит сообщений
+        if len(user_message_times[user_id]) > MAX_MESSAGES:
+            logger_other.info(f"Антифлуд: Пользователь {user_id} превысил лимит сообщений в чате {chat_id}.")
+            add_user_warning(chat_id, user_id)
+            warnings = get_user_warnings(chat_id, user_id)
+            logger_other.warning(f"Антифлуд: Пользователь {user_id} получил предупреждение ({warnings}/3).")
+
+            if warnings >= 3:
+                logger_other.info(f"Антифлуд: Блокируем пользователя {user_id} в чате {chat_id}.")
+                block_user(chat_id, user_id, duration=BAN_DURATION_GROUP, reason="flood")
+                try:
+                    await self.bot.restrict_chat_member(
+                        chat_id,
+                        user_id,
+                        permissions=ChatPermissions(can_send_messages=False),
+                        until_date=int(current_time) + BAN_DURATION_GROUP
                     )
-
-                    # Отправляем сообщение в личку
-                    if message.chat.type == "private":
-                        await message.reply(f"Вы были заблокированы до {readable_block_end} за спам.")
-
-                    return  # Больше не реагируем на пользователя
-
-                blocked_users[chat_id][user_id] = last_activity
-                remaining_warnings = self.warning_limit - last_activity["warnings"]
-                await message.reply(f"{message.from_user.username}, ваше сообщение слишком частое. У вас осталось {remaining_warnings} предупреждений.")
+                    await message.reply(
+                        f"{message.from_user.username} заблокирован за флуд на {BAN_DURATION_GROUP // 60} минут."
+                    )
+                    logger_other.info(f"Антифлуд: Пользователь {user_id} успешно заблокирован в группе {chat_id}.")
+                except Exception as e:
+                    logger_other.error(f"Ошибка при блокировке пользователя {user_id} в группе {chat_id}: {e}")
                 return
 
-            # Сбрасываем предупреждения, если прошло достаточно времени
-            blocked_users[chat_id][user_id]["time"] = current_time
-            blocked_users[chat_id][user_id]["warnings"] = 0
+            # Отправляем предупреждение
+            await message.reply(
+                f"{message.from_user.username}, это предупреждение за флуд. Осталось {3 - warnings}."
+            )
+            logger_other.info(f"Антифлуд: Предупреждение отправлено пользователю {user_id} в группе {chat_id}.")
+            return
 
+        # Если лимит не превышен, передаём управление дальше
         return await handler(event, data)

@@ -6,6 +6,7 @@ from aiogram.types import ChatPermissions, ChatMemberOwner, ChatMemberAdministra
 from datetime import datetime, timedelta
 from utils.user_utils import get_user_level
 from utils.security import crypt
+from middlewares.user_block_manager import reset_warnings, blocked_users
 
 group_and_private_router = Router()
 
@@ -79,7 +80,7 @@ def setup_group_and_private_handlers(ovay_bot):
             await message.reply("Используйте: /unban @username")
             return
 
-        target_username = args[0]
+        target_username = args[0].lstrip("@")  # Убираем '@', если оно есть
 
         # Проверка прав суперпользователя
         user_level = await get_user_level(crypt(message.from_user.id))
@@ -88,35 +89,43 @@ def setup_group_and_private_handlers(ovay_bot):
                 "У вас недостаточно прав для использования этой команды.")
             return
 
-        # Получаем информацию о целевом пользователе
+        # Получаем ID пользователя по username
         try:
-            target_user = await ovay_bot.bot.get_chat_member(
-                message.chat.id,
-                target_username.replace('@', '')
-            )
-        except:
-            await message.reply(f"Пользователь {target_username} не найден.")
-            return
-
-        # Снимаем ограничения с пользователя в групповом чате
-        await ovay_bot.bot.restrict_chat_member(
-            message.chat.id,
-            target_user.user.id,
-            permissions=ChatPermissions(can_send_messages=True)
-        )
-
-        # Снимаем ограничения с пользователя в личной переписке, если таковая есть
-        try:
-            await ovay_bot.bot.restrict_chat_member(
-                target_user.user.id,  # Личный чат с пользователем
-                target_user.user.id,
-                permissions=ChatPermissions(can_send_messages=True)
-            )
+            target_user = await ovay_bot.get_chat(target_username)
+            target_user_id = target_user.id
         except Exception as e:
             await message.reply(
-                f"Не удалось разблокировать пользователя в личной переписке: {e}")
+                f"Пользователь @{target_username} не найден. Ошибка: {e}")
+            return
 
-        await message.reply(f"Пользователь {target_username} разблокирован.")
+        # Снимаем ограничения в Telegram (групповой чат)
+        try:
+            await ovay_bot.restrict_chat_member(
+                message.chat.id,
+                target_user_id,
+                permissions=ChatPermissions(can_send_messages=True)
+            )
+            logger_bot.info(
+                f"Ограничения для пользователя {target_user_id} сняты в чате {message.chat.id}.")
+        except Exception as e:
+            await message.reply(f"Не удалось снять ограничения в чате: {e}")
+            return
+
+        # Полностью удаляем пользователя из всех блокировочных структур
+        if message.chat.id in blocked_users and target_user_id in \
+                blocked_users[message.chat.id]:
+            del blocked_users[message.chat.id][target_user_id]
+            logger_bot.info(
+                f"Пользователь {target_user_id} удалён из blocked_users в чате {message.chat.id}.")
+
+        # Сбрасываем предупреждения для пользователя
+        reset_warnings(message.chat.id, target_user_id)
+        logger_bot.info(
+            f"Предупреждения пользователя {target_user_id} сброшены в чате {message.chat.id}.")
+
+
+        await message.reply(
+            f"Пользователь @{target_username} успешно разбанен.")
 
     @group_and_private_router.message()
     async def ai_response_handler(message: types.Message):
@@ -127,8 +136,8 @@ def setup_group_and_private_handlers(ovay_bot):
 
         if message.chat.type in ["group", "supergroup"]:
             is_reply_to_bot = (
-                    message.reply_to_message and message.reply_to_message.from_user.id == ovay_bot.bot.id)
-            bot_mention = f"@{(await ovay_bot.bot.get_me()).username}"
+                    message.reply_to_message and message.reply_to_message.from_user.id == ovay_bot.id)
+            bot_mention = f"@{(await ovay_bot.get_me()).username}"
             mentions_bot = (bot_mention in message.text) if message.text else False
 
             if not (is_reply_to_bot or mentions_bot):
